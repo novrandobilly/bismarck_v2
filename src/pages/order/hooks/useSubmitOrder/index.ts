@@ -13,7 +13,7 @@ async function submitOrder({ sessionId, values }: SubmitOrderInput): Promise<str
     .insert({
       preorder_session: sessionId,
       customer_name: values.customer_name,
-      whatsapp: values.whatsapp,
+      whatsapp: values.whatsapp.replace(/\D/g, ''),
       fulfillment_type: values.fulfillment_type,
       delivery_address: values.delivery_address ?? '',
       custom_location: values.custom_location ?? '',

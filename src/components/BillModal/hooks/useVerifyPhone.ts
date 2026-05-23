@@ -9,11 +9,11 @@ export function useVerifyPhone(whatsapp: string) {
       setError('Please enter 4 digits.')
       return false
     }
-    if (!whatsapp) {
+    const digits = whatsapp.replace(/\D/g, '')
+    if (!digits) {
       setError("Couldn't verify. Try again.")
       return false
     }
-    const digits = whatsapp.replace(/\D/g, '')
     if (digits.endsWith(last4Digits)) {
       setError(null)
       return true
