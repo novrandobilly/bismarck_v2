@@ -13,6 +13,8 @@ import SessionDetailPage from '@/pages/bismarck/sessions/detail'
 import OrderPage from '@/pages/order'
 import OrderSuccessPage from '@/pages/order/success'
 import SessionOrdersPage from '@/pages/session-orders'
+import UploadProofPage from '@/pages/upload-proof'
+import PaymentsPage from '@/pages/bismarck/payments'
 
 export const router = createBrowserRouter([
   {
@@ -23,6 +25,7 @@ export const router = createBrowserRouter([
       { path: '/order/:sessionId', element: <OrderPage /> },
       { path: '/order/:sessionId/success', element: <OrderSuccessPage /> },
       { path: '/session/:sessionId/orders', element: <SessionOrdersPage /> },
+      { path: '/upload-proof', element: <UploadProofPage /> },
     ],
   },
   {
@@ -42,6 +45,7 @@ export const router = createBrowserRouter([
           { path: '/bismarck/sessions/new', element: <SessionNewPage /> },
           { path: '/bismarck/sessions/:id', element: <SessionDetailPage /> },
           { path: '/bismarck/menu', element: <MenuCatalogPage /> },
+          { path: '/bismarck/payments', element: <PaymentsPage /> },
         ],
       },
     ],
