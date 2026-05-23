@@ -27,7 +27,7 @@ export function useMenuItemMutations() {
           name: data.name,
           description: data.description,
           default_price: data.default_price,
-          category: data.category,
+          category: data.category || null,
           image: imagePath,
           is_active: true,
         })
@@ -59,7 +59,7 @@ export function useMenuItemMutations() {
       if (data.name !== undefined) updates.name = data.name
       if (data.description !== undefined) updates.description = data.description
       if (data.default_price !== undefined) updates.default_price = data.default_price
-      if (data.category !== undefined) updates.category = data.category
+      if (data.category !== undefined) updates.category = data.category || null
       if (imagePath !== undefined) updates.image = imagePath
       const { data: item, error } = await supabase
         .from('menu_items')

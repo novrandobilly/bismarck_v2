@@ -199,7 +199,7 @@ export default function SessionOrdersPage() {
                 key={order.id}
                 order={order}
                 index={i}
-                onViewBill={() => open(<BillModal orderId={order.id} />)}
+                onViewBill={() => open(<BillModal order={order} />)}
               />
             ))}
           </div>
