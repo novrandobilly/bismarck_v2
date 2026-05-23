@@ -73,6 +73,12 @@ export function AdminWrapper() {
             >
               View Store ↗
             </Link>
+            <Link
+              to="/bismarck/payments"
+              className="text-stone-400 hover:text-white text-sm transition-colors"
+            >
+              Payments
+            </Link>
           </div>
           <button
             type="button"

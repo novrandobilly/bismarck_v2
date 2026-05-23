@@ -60,12 +60,18 @@ function OpenPOBanner({ session }: { session: Session }) {
           Order Now →
         </Link>
       </div>
-      <div className="border-t border-amber-200 pt-1">
+      <div className="border-t border-amber-200 pt-1 flex flex-wrap items-center justify-between gap-1">
         <Link
           to={`/session/${session.id}/orders`}
           className="text-xs text-amber-600 hover:text-amber-800 hover:underline transition-colors"
         >
           Already ordered? Check your order status →
+        </Link>
+        <Link
+          to="/upload-proof"
+          className="text-xs text-amber-600 hover:text-amber-800 hover:underline transition-colors"
+        >
+          Upload payment proof →
         </Link>
       </div>
     </div>
