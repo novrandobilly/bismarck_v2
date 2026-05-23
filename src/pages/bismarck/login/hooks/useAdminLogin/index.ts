@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query'
-import { pb } from '@/lib/pocketbase'
+import { supabase } from '@/lib/supabase'
 
 interface LoginInput {
   identity: string
@@ -8,7 +8,13 @@ interface LoginInput {
 
 export function useAdminLogin() {
   return useMutation({
-    mutationFn: ({ identity, password }: LoginInput) =>
-      pb.collection('_superusers').authWithPassword(identity, password),
+    mutationFn: async ({ identity, password }: LoginInput) => {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: identity,
+        password,
+      })
+      if (error) throw error
+      return data
+    },
   })
 }

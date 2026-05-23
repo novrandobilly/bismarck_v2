@@ -1,18 +1,27 @@
 import { useState, useEffect } from 'react'
-import type { AuthModel } from 'pocketbase'
-import { pb } from '@/lib/pocketbase'
+import type { User } from '@supabase/supabase-js'
+import { supabase } from '@/lib/supabase'
 
 export function useAuth() {
-  const [isAuthenticated, setIsAuthenticated] = useState(() => pb.authStore.isValid)
-  const [user, setUser] = useState<AuthModel | null>(() => pb.authStore.model as AuthModel | null)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [user, setUser] = useState<User | null>(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const unsubscribe = pb.authStore.onChange((_token: string, model: AuthModel | null) => {
-      setIsAuthenticated(pb.authStore.isValid)
-      setUser(model)
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setIsAuthenticated(!!session)
+      setUser(session?.user ?? null)
+      setLoading(false)
     })
-    return unsubscribe
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAuthenticated(!!session)
+      setUser(session?.user ?? null)
+    })
+
+    return () => subscription.unsubscribe()
   }, [])
 
-  return { isAuthenticated, user }
+  return { isAuthenticated, user, loading }
 }
+

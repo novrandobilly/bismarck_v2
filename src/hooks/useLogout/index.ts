@@ -1,11 +1,11 @@
 import { useNavigate } from 'react-router-dom'
-import { pb } from '@/lib/pocketbase'
+import { supabase } from '@/lib/supabase'
 
 export function useLogout() {
   const navigate = useNavigate()
 
-  return function logout() {
-    pb.authStore.clear()
+  return async function logout() {
+    await supabase.auth.signOut()
     navigate('/bismarck/login', { replace: true })
   }
 }
