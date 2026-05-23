@@ -1,5 +1,6 @@
 import { useMenuItems } from "@/hooks/useMenuItems";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
+import { getImageUrl } from "@/lib/supabase/storage";
 import type { MenuItem } from "@/types/menu";
 
 function categoryLabel(cat: string) {
@@ -11,7 +12,7 @@ function MenuCard({ item }: { item: MenuItem }) {
     <div className="bg-white border border-stone-100 rounded-2xl overflow-hidden flex flex-col hover:shadow-md transition-shadow">
       {item.image ? (
         <img
-          src={`http://127.0.0.1:8090/api/files/${item.collectionId}/${item.id}/${item.image}`}
+          src={getImageUrl(item.image)}
           alt={item.name}
           className="w-full h-44 object-cover"
         />

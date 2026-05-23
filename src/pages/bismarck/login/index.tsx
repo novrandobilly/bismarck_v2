@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { pb } from '@/lib/pocketbase'
+import { useAuth } from '@/hooks/useAuth'
 import { useAdminLogin } from './hooks/useAdminLogin'
 import { LoadingSpinner } from '@/components/LoadingSpinner'
 import { cn } from '@/lib/utils/cn'
@@ -17,6 +17,7 @@ type FormValues = z.infer<typeof schema>
 
 export default function LoginPage() {
   const navigate = useNavigate()
+  const { isAuthenticated } = useAuth()
   const { mutate: login, isPending, error } = useAdminLogin()
 
   const {
@@ -26,8 +27,8 @@ export default function LoginPage() {
   } = useForm<FormValues>({ resolver: zodResolver(schema) })
 
   useEffect(() => {
-    if (pb.authStore.isValid) navigate('/bismarck/dashboard', { replace: true })
-  }, [navigate])
+    if (isAuthenticated) navigate('/bismarck/dashboard', { replace: true })
+  }, [isAuthenticated, navigate])
 
   function onSubmit(values: FormValues) {
     login(values, {
