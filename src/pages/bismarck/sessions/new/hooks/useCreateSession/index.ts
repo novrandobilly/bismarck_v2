@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { pb } from '@/lib/pocketbase'
+import { supabase } from '@/lib/supabase'
 import type { Session } from '@/types/session'
 
 export interface SessionFormValues {
@@ -15,35 +15,40 @@ export interface SessionFormValues {
 }
 
 async function createSession(values: SessionFormValues): Promise<Session> {
-  const session = await pb.collection('preorder_sessions').create<Session>({
-    title: values.title,
-    description: values.description,
-    fulfillment_date: new Date(values.fulfillment_date).toISOString(),
-    order_deadline: new Date(values.order_deadline).toISOString(),
-    max_orders: values.max_orders,
-    status: 'open',
-    allow_pickup: values.allow_pickup,
-    allow_delivery: values.allow_delivery,
-    custom_locations: JSON.stringify(values.custom_locations),
-  })
+  const { data: session, error: sessionError } = await supabase
+    .from('preorder_sessions')
+    .insert({
+      title: values.title,
+      description: values.description,
+      fulfillment_date: new Date(values.fulfillment_date).toISOString(),
+      order_deadline: new Date(values.order_deadline).toISOString(),
+      max_orders: values.max_orders,
+      status: 'open',
+      allow_pickup: values.allow_pickup,
+      allow_delivery: values.allow_delivery,
+      custom_locations: values.custom_locations,
+    })
+    .select()
+    .single()
+  if (sessionError) throw sessionError
 
-  try {
-    await Promise.all(
-      values.selectedItems.map(item =>
-        pb.collection('preorder_session_items').create({
-          preorder_session: session.id,
-          menu_item: item.menu_item_id,
-          price: item.price,
-          is_available: item.is_available,
-        }),
-      ),
-    )
-  } catch (error) {
-    await pb.collection('preorder_sessions').delete(session.id)
-    throw error
+  const itemRows = values.selectedItems.map(item => ({
+    preorder_session: session.id,
+    menu_item: item.menu_item_id,
+    price: item.price,
+    is_available: item.is_available,
+  }))
+
+  const { error: itemsError } = await supabase
+    .from('preorder_session_items')
+    .insert(itemRows)
+
+  if (itemsError) {
+    await supabase.from('preorder_sessions').delete().eq('id', session.id)
+    throw itemsError
   }
 
-  return session
+  return session as Session
 }
 
 export function useCreateSession() {
