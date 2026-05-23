@@ -6,8 +6,7 @@ export interface MenuItem {
   category: string
   image: string
   is_active: boolean
-  collectionId: string
-  collectionName: string
+  created_at: string
 }
 
 export interface SessionItem {
@@ -16,7 +15,5 @@ export interface SessionItem {
   menu_item: string
   price: number
   is_available: boolean
-  expand?: {
-    menu_item?: MenuItem
-  }
+  menu_items?: MenuItem
 }

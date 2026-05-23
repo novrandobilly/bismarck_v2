@@ -1,5 +1,3 @@
-import type { RecordModel } from 'pocketbase'
-
 export type SessionStatus = 'open' | 'closed'
 
 export interface CustomLocation {
@@ -7,7 +5,8 @@ export interface CustomLocation {
   time: string
 }
 
-export interface Session extends RecordModel {
+export interface Session {
+  id: string
   title: string
   description: string
   fulfillment_date: string
@@ -17,4 +16,6 @@ export interface Session extends RecordModel {
   allow_pickup: boolean
   allow_delivery: boolean
   custom_locations: CustomLocation[]
+  created_at: string
+  updated_at: string
 }

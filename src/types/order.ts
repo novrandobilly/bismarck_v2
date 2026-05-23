@@ -1,3 +1,5 @@
+import type { SessionItem } from './menu'
+
 export type FulfillmentType = 'pickup' | 'delivery' | 'custom'
 
 export interface Order {
@@ -10,19 +12,16 @@ export interface Order {
   custom_location: string
   notes: string
   is_fulfilled: boolean
-  expand?: {
-    'order_items(order)'?: OrderItem[]
-  }
+  created_at: string
+  order_items?: OrderItem[]
 }
 
 export interface OrderItem {
   id: string
-  order: string
+  order_id: string
   preorder_session_item: string
   quantity: number
-  expand?: {
-    preorder_session_item?: import('./menu').SessionItem
-  }
+  preorder_session_items?: SessionItem
 }
 
 export interface OrderItemFormValue {
