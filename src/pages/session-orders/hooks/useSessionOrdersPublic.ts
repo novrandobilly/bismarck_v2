@@ -15,6 +15,7 @@ async function fetchSessionOrders(sessionId: string): Promise<SessionOrdersData>
       .from('orders')
       .select('*, order_items(*, preorder_session_items(*, menu_items(*)))')
       .eq('preorder_session', sessionId)
+      .eq('has_paid', true)
       .order('created_at', { ascending: true }),
   ])
   if (sessionResult.error) throw sessionResult.error
