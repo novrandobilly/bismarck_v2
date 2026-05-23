@@ -1,20 +1,16 @@
 import { useQuery } from '@tanstack/react-query'
-import { pb } from '@/lib/pocketbase'
-
-interface SchemaField {
-  name: string
-  type: string
-  values?: string[]
-}
+import { supabase } from '@/lib/supabase'
 
 export function useCategoryOptions() {
   return useQuery({
-    queryKey: ['menu_items_schema', 'category'],
+    queryKey: ['categories'],
     queryFn: async () => {
-      const collection = await pb.collections.getOne('menu_items')
-      const fields = (collection as unknown as { fields: SchemaField[] }).fields ?? []
-      const categoryField = fields.find(f => f.name === 'category' && f.type === 'select')
-      return categoryField?.values ?? []
+      const { data, error } = await supabase
+        .from('categories')
+        .select('name')
+        .order('name', { ascending: true })
+      if (error) throw error
+      return (data ?? []).map((row) => row.name as string)
     },
     staleTime: Infinity,
   })

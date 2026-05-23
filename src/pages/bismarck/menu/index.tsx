@@ -23,7 +23,7 @@ export default function MenuCatalogPage() {
   function handleSave(data: MenuItemFormData) {
     setSaveError(null)
     if (editTarget) {
-      updateItem.mutate({ id: editTarget.id, data }, {
+      updateItem.mutate({ id: editTarget.id, data, currentImagePath: editTarget.image }, {
         onSuccess: () => setEditTarget(undefined),
         onError: (err) => setSaveError(err instanceof Error ? err.message : 'Failed to save item'),
       })
