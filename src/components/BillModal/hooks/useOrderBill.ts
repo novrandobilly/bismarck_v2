@@ -1,11 +1,15 @@
 import { useQuery } from '@tanstack/react-query'
-import { pb } from '@/lib/pocketbase'
+import { supabase } from '@/lib/supabase'
 import type { Order } from '@/types/order'
 
 async function fetchOrderBill(orderId: string): Promise<Order> {
-  return pb.collection('orders').getOne<Order>(orderId, {
-    expand: 'order_items(order).preorder_session_item.menu_item',
-  })
+  const { data, error } = await supabase
+    .from('orders')
+    .select('*, order_items(*, preorder_session_items(*, menu_items(*)))')
+    .eq('id', orderId)
+    .single()
+  if (error) throw error
+  return data as Order
 }
 
 export function useOrderBill(orderId: string | null) {

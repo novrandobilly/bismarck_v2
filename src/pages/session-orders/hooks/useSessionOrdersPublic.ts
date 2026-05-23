@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { pb } from '@/lib/pocketbase'
+import { supabase } from '@/lib/supabase'
 import type { Order } from '@/types/order'
 import type { Session } from '@/types/session'
 
@@ -9,15 +9,20 @@ interface SessionOrdersData {
 }
 
 async function fetchSessionOrders(sessionId: string): Promise<SessionOrdersData> {
-  const [session, orders] = await Promise.all([
-    pb.collection('preorder_sessions').getOne<Session>(sessionId),
-    pb.collection('orders').getFullList<Order>({
-      filter: pb.filter('preorder_session = {:id}', { id: sessionId }),
-      expand: 'order_items(order).preorder_session_item.menu_item',
-      sort: '+created',
-    }),
+  const [sessionResult, ordersResult] = await Promise.all([
+    supabase.from('preorder_sessions').select('*').eq('id', sessionId).single(),
+    supabase
+      .from('orders')
+      .select('*, order_items(*, preorder_session_items(*, menu_items(*)))')
+      .eq('preorder_session', sessionId)
+      .order('created_at', { ascending: true }),
   ])
-  return { session, orders }
+  if (sessionResult.error) throw sessionResult.error
+  if (ordersResult.error) throw ordersResult.error
+  return {
+    session: sessionResult.data as Session,
+    orders: (ordersResult.data ?? []) as Order[],
+  }
 }
 
 export function useSessionOrdersPublic(sessionId: string | undefined) {

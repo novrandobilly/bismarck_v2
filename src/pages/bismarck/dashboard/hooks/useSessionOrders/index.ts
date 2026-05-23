@@ -1,16 +1,19 @@
 import { useQuery } from '@tanstack/react-query'
-import { pb } from '@/lib/pocketbase'
+import { supabase } from '@/lib/supabase'
 import type { Order } from '@/types/order'
 
 export function useSessionOrders(sessionId: string) {
   return useQuery({
     queryKey: ['session-orders-preview', sessionId],
-    queryFn: () =>
-      pb.collection('orders').getFullList<Order>({
-        filter: pb.filter('preorder_session = {:id}', { id: sessionId }),
-        sort: '-created',
-        fields: 'id,customer_name,fulfillment_type,is_fulfilled,created',
-      }),
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('orders')
+        .select('id, customer_name, fulfillment_type, is_fulfilled, created_at')
+        .eq('preorder_session', sessionId)
+        .order('created_at', { ascending: false })
+      if (error) throw error
+      return (data ?? []) as Pick<Order, 'id' | 'customer_name' | 'fulfillment_type' | 'is_fulfilled' | 'created_at'>[]
+    },
     enabled: !!sessionId,
   })
 }
