@@ -1,11 +1,16 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { pb } from '@/lib/pocketbase'
+import { supabase } from '@/lib/supabase'
 
 export function useToggleFulfilled(sessionId: string | undefined) {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: ({ orderId, is_fulfilled }: { orderId: string; is_fulfilled: boolean }) =>
-      pb.collection('orders').update(orderId, { is_fulfilled }),
+    mutationFn: async ({ orderId, is_fulfilled }: { orderId: string; is_fulfilled: boolean }) => {
+      const { error } = await supabase
+        .from('orders')
+        .update({ is_fulfilled })
+        .eq('id', orderId)
+      if (error) throw error
+    },
     onSuccess: () => {
       if (sessionId) qc.invalidateQueries({ queryKey: ['session-detail', sessionId] })
     },
