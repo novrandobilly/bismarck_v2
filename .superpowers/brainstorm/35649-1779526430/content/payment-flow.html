@@ -1,0 +1,76 @@
+<h2>Payment Flow Layout Options</h2>
+<p class="subtitle">How should the success page + proof upload work together?</p>
+
+<div class="cards">
+
+  <!-- Option A -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#fafafa;padding:16px;font-size:12px;border-bottom:1px solid #e5e5e7">
+      <div style="background:#fff;border-radius:12px;padding:14px;box-shadow:0 1px 4px rgba(0,0,0,0.08);max-width:260px;margin:0 auto">
+        <div style="color:#16a34a;font-weight:700;font-size:13px;margin-bottom:6px">✓ Order placed!</div>
+        <div style="background:#f5f5f5;border-radius:6px;padding:8px;font-size:11px;margin-bottom:8px;color:#555">
+          <div>Order ID: <strong>#A3F8...</strong></div>
+          <div>Bagel ×2 — Rp 80.000</div>
+          <div style="margin-top:4px;font-weight:600">Total: Rp 80.000</div>
+        </div>
+        <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:8px;font-size:11px;margin-bottom:8px">
+          <div style="font-weight:700;margin-bottom:3px">💳 Pay now</div>
+          <div style="display:flex;gap:6px;margin-bottom:6px">
+            <div style="flex:1;border:1px solid #d97706;border-radius:6px;padding:5px;text-align:center;font-size:10px;background:#fff8;font-weight:600">QRIS</div>
+            <div style="flex:1;border:1px solid #d97706;border-radius:6px;padding:5px;text-align:center;font-size:10px;background:#fff8;font-weight:600">Transfer</div>
+          </div>
+          <div style="font-size:10px;color:#666">BCA · 1234567 · a/n Bismarck</div>
+        </div>
+        <div style="background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:8px;font-size:11px;text-align:center">
+          <div style="font-weight:700;margin-bottom:3px">📎 Upload Proof</div>
+          <div style="color:#555;font-size:10px">Tap to upload your payment screenshot</div>
+          <div style="margin-top:6px;background:#22c55e;color:#fff;border-radius:6px;padding:4px;font-size:10px">Upload Now →</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — All-in-one success page</h3>
+      <p>The success page shows order summary + payment instructions + upload proof button. Everything in one place, no extra navigation.</p>
+    </div>
+  </div>
+
+  <!-- Option B -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#fafafa;padding:16px;font-size:12px;border-bottom:1px solid #e5e5e7">
+      <div style="display:flex;gap:8px;max-width:300px;margin:0 auto">
+        <div style="flex:1;background:#fff;border-radius:12px;padding:10px;box-shadow:0 1px 4px rgba(0,0,0,0.08)">
+          <div style="color:#16a34a;font-weight:700;font-size:11px;margin-bottom:4px">✓ Order placed!</div>
+          <div style="font-size:10px;color:#555;margin-bottom:6px">
+            <div>Bagel ×2</div>
+            <div style="font-weight:600;margin-top:2px">Rp 80.000</div>
+          </div>
+          <div style="background:#fffbeb;border-radius:6px;padding:6px;font-size:10px;margin-bottom:6px">
+            💳 Transfer to BCA 1234567
+          </div>
+          <div style="background:#3b82f6;color:#fff;border-radius:6px;padding:4px;font-size:10px;text-align:center;font-weight:600">View Order List →</div>
+        </div>
+        <div style="flex:1;background:#fff;border-radius:12px;padding:10px;box-shadow:0 1px 4px rgba(0,0,0,0.08)">
+          <div style="font-weight:700;font-size:11px;margin-bottom:4px">📎 Upload Proof</div>
+          <div style="font-size:10px;color:#555;margin-bottom:6px">Order ID:<br/><strong>#A3F8...</strong></div>
+          <div style="background:#f0f0f0;border-radius:6px;padding:12px;text-align:center;font-size:10px;color:#888;margin-bottom:6px;">📷 choose file</div>
+          <div style="background:#f59e0b;color:#fff;border-radius:6px;padding:4px;font-size:10px;text-align:center;font-weight:600">Submit →</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Success page + separate upload page</h3>
+      <p>Success page shows order + payment info. A separate <code>/upload-proof</code> page (also linked from home) handles proof submission with pre-filled Order ID.</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="section" style="margin-top:24px;background:var(--bg-secondary);border-radius:10px;padding:14px;border:1px solid var(--border)">
+  <p class="label">Shared in both options</p>
+  <ul style="margin-top:8px;padding-left:18px;line-height:1.8;font-size:14px">
+    <li>Home page gets an <strong>"Upload Payment Proof"</strong> button</li>
+    <li>Admin gets a <strong>Payments</strong> section to review proofs &amp; mark as paid</li>
+    <li>Public order list only shows <strong>paid orders</strong></li>
+    <li>QRIS is a placeholder image for now</li>
+  </ul>
+</div>

@@ -7,7 +7,6 @@ const MAX_FILE_SIZE_MB = 5
 export default function UploadProofPage() {
   const [searchParams] = useSearchParams()
   const [orderId, setOrderId] = useState(searchParams.get('orderId') ?? '')
-  const [paymentMethod, setPaymentMethod] = useState<'qris' | 'bank_transfer'>('bank_transfer')
   const [file, setFile] = useState<File | null>(null)
   const [fileError, setFileError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
@@ -31,7 +30,7 @@ export default function UploadProofPage() {
     if (!orderId.trim() || !file) return
     reset()
     mutate(
-      { orderId: orderId.trim(), paymentMethod, file },
+      { orderId: orderId.trim(), file },
       { onSuccess: () => setSuccess(true) }
     )
   }
@@ -78,29 +77,6 @@ export default function UploadProofPage() {
               required
               className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm text-stone-800 focus:outline-none focus:ring-2 focus:ring-amber-400"
             />
-          </div>
-
-          {/* Payment method */}
-          <div>
-            <label className="block text-sm font-medium text-stone-700 mb-1">
-              Payment Method
-            </label>
-            <div className="flex gap-2">
-              {(['bank_transfer', 'qris'] as const).map((method) => (
-                <button
-                  key={method}
-                  type="button"
-                  onClick={() => setPaymentMethod(method)}
-                  className={`flex-1 text-xs font-semibold px-4 py-2.5 rounded-xl border transition-colors ${
-                    paymentMethod === method
-                      ? 'bg-amber-500 border-amber-500 text-white'
-                      : 'bg-white border-stone-200 text-stone-500 hover:border-stone-300'
-                  }`}
-                >
-                  {method === 'bank_transfer' ? 'Bank Transfer' : 'QRIS'}
-                </button>
-              ))}
-            </div>
           </div>
 
           {/* File upload */}

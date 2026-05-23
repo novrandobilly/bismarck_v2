@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useParams, useSearchParams, Link } from 'react-router-dom'
+import { useSearchParams, Link } from 'react-router-dom'
 import { useOrderSuccess } from './hooks/useOrderSuccess'
 import { BANK_INFO } from '@/lib/bankInfo'
 import { formatRupiah } from '@/tools/formatRupiah'
@@ -8,10 +8,9 @@ import { LoadingSpinner } from '@/components/LoadingSpinner'
 type PaymentTab = 'bank_transfer' | 'qris'
 
 export default function OrderSuccessPage() {
-  const { sessionId } = useParams<{ sessionId: string }>()
   const [searchParams] = useSearchParams()
   const orderId = searchParams.get('orderId')
-  const [activeTab, setActiveTab] = useState<PaymentTab>('bank_transfer')
+  const [activeTab, setActiveTab] = useState<PaymentTab>('qris')
 
   const { data: order, isLoading } = useOrderSuccess(orderId)
 
@@ -79,17 +78,6 @@ export default function OrderSuccessPage() {
             <div className="flex gap-2 mb-4">
               <button
                 type="button"
-                onClick={() => setActiveTab('bank_transfer')}
-                className={`text-xs font-semibold px-4 py-2 rounded-full border transition-colors ${
-                  activeTab === 'bank_transfer'
-                    ? 'bg-amber-500 border-amber-500 text-white'
-                    : 'bg-white border-stone-200 text-stone-500 hover:border-stone-300'
-                }`}
-              >
-                Bank Transfer
-              </button>
-              <button
-                type="button"
                 onClick={() => setActiveTab('qris')}
                 className={`text-xs font-semibold px-4 py-2 rounded-full border transition-colors ${
                   activeTab === 'qris'
@@ -98,6 +86,17 @@ export default function OrderSuccessPage() {
                 }`}
               >
                 QRIS
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab('bank_transfer')}
+                className={`text-xs font-semibold px-4 py-2 rounded-full border transition-colors ${
+                  activeTab === 'bank_transfer'
+                    ? 'bg-amber-500 border-amber-500 text-white'
+                    : 'bg-white border-stone-200 text-stone-500 hover:border-stone-300'
+                }`}
+              >
+                Bank Transfer
               </button>
             </div>
           </div>
@@ -145,18 +144,10 @@ export default function OrderSuccessPage() {
           </Link>
         )}
 
-        {/* Reassurance + orders link */}
+        {/* Reassurance */}
         <p className="text-center text-xs text-stone-400 mb-4">
           Don't worry — you can always come back to see your order detail on the orders page.
         </p>
-        {sessionId && (
-          <Link
-            to={`/session/${sessionId}/orders`}
-            className="block bg-stone-900 hover:bg-stone-800 text-white text-center font-semibold text-sm py-3 rounded-xl transition-colors"
-          >
-            See all orders for this session →
-          </Link>
-        )}
 
       </div>
     </div>

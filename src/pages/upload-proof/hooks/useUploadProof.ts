@@ -4,11 +4,10 @@ import { uploadPaymentProof, deletePaymentProof } from '@/lib/supabase/payment-s
 
 interface UploadProofInput {
   orderId: string
-  paymentMethod: 'qris' | 'bank_transfer'
   file: File
 }
 
-async function submitProof({ orderId, paymentMethod, file }: UploadProofInput): Promise<void> {
+async function submitProof({ orderId, file }: UploadProofInput): Promise<void> {
   // 1. Check the order exists
   const { data: order, error: fetchError } = await supabase
     .from('orders')
@@ -28,7 +27,6 @@ async function submitProof({ orderId, paymentMethod, file }: UploadProofInput): 
     .from('orders')
     .update({
       payment_proof_url: urlData.publicUrl,
-      payment_method: paymentMethod,
     })
     .eq('id', orderId)
     .select('id')
