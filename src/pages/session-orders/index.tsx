@@ -1,8 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { useSessionOrdersPublic } from "./hooks/useSessionOrdersPublic";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
-import type { Order, OrderItem } from "@/types/order";
-import type { SessionItem } from "@/types/menu";
+import type { Order } from "@/types/order";
 import { cn } from "@/lib/utils/cn";
 import { useModal } from "@/lib/modal/useModal";
 import { BillModal } from "@/components/BillModal";
@@ -41,8 +40,7 @@ function OrderCard({
   index: number;
   onViewBill: () => void;
 }) {
-  const orderItems = (order.expand?.["order_items(order)"] ??
-    []) as OrderItem[];
+  const orderItems = order.order_items ?? [];
 
   return (
     <div
@@ -87,10 +85,7 @@ function OrderCard({
         {orderItems.length > 0 && (
           <div className="mt-2 space-y-0.5">
             {orderItems.map((oi) => {
-              const si = oi.expand?.preorder_session_item as
-                | SessionItem
-                | undefined;
-              const name = si?.expand?.menu_item?.name ?? "Item";
+              const name = oi.preorder_session_items?.menu_items?.name ?? "Item";
               return (
                 <p key={oi.id} className="text-xs text-stone-500">
                   {oi.quantity}× {name}
@@ -140,7 +135,6 @@ export default function SessionOrdersPage() {
   return (
     <div className="min-h-screen bg-stone-50">
       <div className="max-w-2xl mx-auto px-4 py-8">
-        {/* Header — unchanged */}
         <div className="mb-6">
           <Link
             to="/"
@@ -154,7 +148,6 @@ export default function SessionOrdersPage() {
           </p>
         </div>
 
-        {/* Summary bar — unchanged */}
         <div className="bg-white rounded-2xl px-5 py-4 mb-6 flex items-center justify-between gap-4">
           <div>
             <p className="text-2xl font-extrabold text-stone-800">{orders.length}</p>
@@ -179,7 +172,6 @@ export default function SessionOrdersPage() {
           </div>
         </div>
 
-        {/* Payment banner */}
         <div className="bg-amber-50 border border-amber-200 rounded-2xl px-5 py-4 mb-6">
           <p className="font-bold text-amber-900 text-sm mb-1">💳 How to Pay</p>
           <p className="text-amber-800 text-sm leading-relaxed">
@@ -191,7 +183,6 @@ export default function SessionOrdersPage() {
           </p>
         </div>
 
-        {/* Order list */}
         {orders.length === 0 ? (
           <div className="text-center py-16 text-stone-400">
             <p className="text-4xl mb-3">🥯</p>

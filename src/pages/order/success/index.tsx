@@ -3,8 +3,6 @@ import { useOrderSuccess } from './hooks/useOrderSuccess'
 import { BANK_INFO } from '@/lib/bankInfo'
 import { formatRupiah } from '@/tools/formatRupiah'
 import { LoadingSpinner } from '@/components/LoadingSpinner'
-import type { OrderItem } from '@/types/order'
-import type { SessionItem } from '@/types/menu'
 
 export default function OrderSuccessPage() {
   const { sessionId } = useParams<{ sessionId: string }>()
@@ -13,9 +11,9 @@ export default function OrderSuccessPage() {
 
   const { data: order, isLoading } = useOrderSuccess(orderId)
 
-  const orderItems = (order?.expand?.['order_items(order)'] ?? []) as OrderItem[]
+  const orderItems = order?.order_items ?? []
   const total = orderItems.reduce((sum, oi) => {
-    const price = (oi.expand?.preorder_session_item as SessionItem | undefined)?.price ?? 0
+    const price = oi.preorder_session_items?.price ?? 0
     return sum + price * oi.quantity
   }, 0)
 
@@ -51,8 +49,8 @@ export default function OrderSuccessPage() {
             <p className="font-bold text-stone-800 text-sm mb-3">🧾 Your Order</p>
             <div className="space-y-2 mb-3">
               {orderItems.map((oi) => {
-                const si = oi.expand?.preorder_session_item as SessionItem | undefined
-                const name = si?.expand?.menu_item?.name ?? 'Item'
+                const si = oi.preorder_session_items
+                const name = si?.menu_items?.name ?? 'Item'
                 const price = si?.price ?? 0
                 return (
                   <div key={oi.id} className="flex justify-between text-sm">

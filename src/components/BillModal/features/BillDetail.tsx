@@ -1,7 +1,6 @@
 import { BANK_INFO } from '@/lib/bankInfo'
 import { formatRupiah } from '@/tools/formatRupiah'
-import type { Order, OrderItem } from '@/types/order'
-import type { SessionItem } from '@/types/menu'
+import type { Order } from '@/types/order'
 
 interface Props {
   order: Order
@@ -9,10 +8,10 @@ interface Props {
 }
 
 export function BillDetail({ order, onClose }: Props) {
-  const orderItems = (order.expand?.['order_items(order)'] ?? []) as OrderItem[]
+  const orderItems = order.order_items ?? []
 
   const total = orderItems.reduce((sum, oi) => {
-    const price = (oi.expand?.preorder_session_item as SessionItem | undefined)?.price ?? 0
+    const price = oi.preorder_session_items?.price ?? 0
     return sum + price * oi.quantity
   }, 0)
 
@@ -25,8 +24,8 @@ export function BillDetail({ order, onClose }: Props) {
 
       <div className="border-t border-stone-100 pt-3 space-y-2 mb-3">
         {orderItems.map((oi) => {
-          const si = oi.expand?.preorder_session_item as SessionItem | undefined
-          const name = si?.expand?.menu_item?.name ?? 'Item'
+          const si = oi.preorder_session_items
+          const name = si?.menu_items?.name ?? 'Item'
           const price = si?.price ?? 0
           return (
             <div key={oi.id} className="flex justify-between text-sm">

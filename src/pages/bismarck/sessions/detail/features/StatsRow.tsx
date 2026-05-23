@@ -1,5 +1,4 @@
 import type { Order } from '@/types/order'
-import type { OrderItem } from '@/types/order'
 
 const idr = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 })
 
@@ -12,9 +11,9 @@ export function StatsRow({ orders }: Props) {
   const totalRevenue = orders
     .filter(o => o.is_fulfilled)
     .reduce((sum, order) => {
-    const items = (order.expand?.['order_items(order)'] ?? []) as OrderItem[]
-    return sum + items.reduce((s, oi) => s + (oi.expand?.preorder_session_item?.price ?? 0) * oi.quantity, 0)
-  }, 0)
+      const items = order.order_items ?? []
+      return sum + items.reduce((s, oi) => s + (oi.preorder_session_items?.price ?? 0) * oi.quantity, 0)
+    }, 0)
 
   return (
     <div className="grid grid-cols-4 gap-4 mb-6">

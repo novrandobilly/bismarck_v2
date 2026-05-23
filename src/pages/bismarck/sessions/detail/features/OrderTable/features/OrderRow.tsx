@@ -1,4 +1,4 @@
-import type { Order, OrderItem } from '@/types/order'
+import type { Order } from '@/types/order'
 import { cn } from '@/lib/utils/cn'
 
 const idr = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 })
@@ -10,7 +10,7 @@ interface Props {
 }
 
 export function OrderRow({ order, onToggleFulfilled, isToggling }: Props) {
-  const orderItems = (order.expand?.['order_items(order)'] ?? []) as OrderItem[]
+  const orderItems = order.order_items ?? []
   const fulfillmentLabel: Record<string, string> = {
     pickup: 'Pickup',
     delivery: 'Delivery',
@@ -18,7 +18,7 @@ export function OrderRow({ order, onToggleFulfilled, isToggling }: Props) {
   }
 
   const orderTotal = orderItems.reduce((sum, oi) => {
-    const price = oi.expand?.preorder_session_item?.price ?? 0
+    const price = oi.preorder_session_items?.price ?? 0
     return sum + price * oi.quantity
   }, 0)
 
@@ -34,8 +34,8 @@ export function OrderRow({ order, onToggleFulfilled, isToggling }: Props) {
       </td>
       <td className="py-3 px-4">
         {orderItems.map(oi => {
-          const name = oi.expand?.preorder_session_item?.expand?.menu_item?.name ?? 'Item'
-          const price = oi.expand?.preorder_session_item?.price ?? 0
+          const name = oi.preorder_session_items?.menu_items?.name ?? 'Item'
+          const price = oi.preorder_session_items?.price ?? 0
           return (
             <p key={oi.id} className="text-xs text-stone-600">
               {oi.quantity}x {name}

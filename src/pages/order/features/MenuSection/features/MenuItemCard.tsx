@@ -13,7 +13,7 @@ function formatPrice(price: number) {
 }
 
 export function MenuItemCard({ sessionItem, quantity, onChangeQuantity }: Props) {
-  const menuItem = sessionItem.expand?.menu_item
+  const menuItem = sessionItem.menu_items
   if (!menuItem) return null
 
   return (
