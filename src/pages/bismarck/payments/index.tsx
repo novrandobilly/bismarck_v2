@@ -70,7 +70,7 @@ function PaymentRow({ order, onMarkPaid, isMarking }: {
 
 export default function PaymentsPage() {
   const { data: orders = [], isLoading } = usePendingPayments()
-  const { mutate: markPaid, isPending: isMarking, variables: markingId } = useMarkPaid()
+  const { mutate: markPaid, isPending: isMarking, variables: markingId, error: markPaidError } = useMarkPaid()
 
   return (
     <div className="min-h-screen bg-stone-50">
@@ -79,6 +79,12 @@ export default function PaymentsPage() {
         <p className="text-stone-500 text-sm mb-6">
           Orders with uploaded payment proof awaiting your approval.
         </p>
+
+        {markPaidError && (
+          <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 mb-4 text-sm text-red-600">
+            Failed to mark as paid: {(markPaidError as Error).message}
+          </div>
+        )}
 
         {isLoading && (
           <div className="flex justify-center py-12">
