@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
-import { uploadPaymentProof } from '@/lib/supabase/payment-storage'
+import { uploadPaymentProof, deletePaymentProof } from '@/lib/supabase/payment-storage'
 
 interface UploadProofInput {
   orderId: string
@@ -31,7 +31,12 @@ async function submitProof({ orderId, paymentMethod, file }: UploadProofInput): 
       payment_method: paymentMethod,
     })
     .eq('id', orderId)
-  if (updateError) throw updateError
+    .select('id')
+    .single()
+  if (updateError) {
+    await deletePaymentProof(path).catch(() => {})
+    throw updateError
+  }
 }
 
 export function useUploadProof() {

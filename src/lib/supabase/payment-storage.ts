@@ -15,3 +15,9 @@ export async function uploadPaymentProof(file: File): Promise<string> {
   if (error) throw error
   return path
 }
+
+export async function deletePaymentProof(path: string): Promise<void> {
+  if (!path) return
+  const { error } = await supabase.storage.from(BUCKET).remove([path])
+  if (error) throw error
+}
