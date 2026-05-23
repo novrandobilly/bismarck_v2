@@ -47,7 +47,7 @@ export function QuantitySelector({ value, onChange, min = 0, max, className }: P
         onChange={(e) => setInputVal(e.target.value)}
         onBlur={(e) => commit(e.target.value)}
         onKeyDown={(e) => { if (e.key === 'Enter') (e.target as HTMLInputElement).blur() }}
-        className="w-8 text-center text-sm font-medium tabular-nums bg-transparent border-b border-transparent focus:border-amber-400 focus:outline-none"
+        className="w-8 text-center text-sm font-medium tabular-nums bg-transparent border-b border-transparent focus:border-amber-400 focus:outline-none appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
         aria-label="Quantity"
       />
       <button
