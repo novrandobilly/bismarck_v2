@@ -1,13 +1,17 @@
+import { useState } from 'react'
 import { useParams, useSearchParams, Link } from 'react-router-dom'
 import { useOrderSuccess } from './hooks/useOrderSuccess'
 import { BANK_INFO } from '@/lib/bankInfo'
 import { formatRupiah } from '@/tools/formatRupiah'
 import { LoadingSpinner } from '@/components/LoadingSpinner'
 
+type PaymentTab = 'bank_transfer' | 'qris'
+
 export default function OrderSuccessPage() {
   const { sessionId } = useParams<{ sessionId: string }>()
   const [searchParams] = useSearchParams()
   const orderId = searchParams.get('orderId')
+  const [activeTab, setActiveTab] = useState<PaymentTab>('bank_transfer')
 
   const { data: order, isLoading } = useOrderSuccess(orderId)
 
@@ -27,17 +31,17 @@ export default function OrderSuccessPage() {
           <h1 className="text-2xl font-bold text-stone-800 mb-1">Order placed!</h1>
           {order && (
             <p className="text-stone-500 text-sm">
-              Thanks, {order.customer_name}. We'll see you on fulfillment day.
+              Thanks, {order.customer_name}. Please complete your payment below.
             </p>
           )}
           {!order && !isLoading && (
             <p className="text-stone-500 text-sm">
-              Your order has been received. Thank you!
+              Your order has been received. Please complete your payment below.
             </p>
           )}
         </div>
 
-        {/* Bill summary — shown when data is available */}
+        {/* Bill summary */}
         {isLoading && (
           <div className="flex justify-center py-6">
             <LoadingSpinner />
@@ -67,24 +71,81 @@ export default function OrderSuccessPage() {
           </div>
         )}
 
-        {/* Payment info */}
-        <div className="bg-amber-50 border border-amber-200 rounded-2xl px-5 py-4 mb-4">
-          <p className="font-bold text-amber-900 text-sm mb-1">💳 Pay via bank transfer</p>
-          <p className="text-amber-800 text-sm leading-relaxed">
-            {BANK_INFO.bank} · <strong>{BANK_INFO.accountNumber}</strong>
-            <br />a/n <strong>{BANK_INFO.accountHolder}</strong>
-            {total > 0 && (
-              <>
-                <br />
-                <span className="text-amber-700">
-                  Amount: <strong>{formatRupiah(total)}</strong>
-                </span>
-              </>
+        {/* Payment instructions */}
+        <div className="bg-white rounded-2xl border border-stone-200 mb-4 overflow-hidden">
+          <div className="px-5 pt-4 pb-0">
+            <p className="font-bold text-stone-800 text-sm mb-3">💳 Complete Payment</p>
+            {/* Tabs */}
+            <div className="flex gap-2 mb-4">
+              <button
+                type="button"
+                onClick={() => setActiveTab('bank_transfer')}
+                className={`text-xs font-semibold px-4 py-2 rounded-full border transition-colors ${
+                  activeTab === 'bank_transfer'
+                    ? 'bg-amber-500 border-amber-500 text-white'
+                    : 'bg-white border-stone-200 text-stone-500 hover:border-stone-300'
+                }`}
+              >
+                Bank Transfer
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab('qris')}
+                className={`text-xs font-semibold px-4 py-2 rounded-full border transition-colors ${
+                  activeTab === 'qris'
+                    ? 'bg-amber-500 border-amber-500 text-white'
+                    : 'bg-white border-stone-200 text-stone-500 hover:border-stone-300'
+                }`}
+              >
+                QRIS
+              </button>
+            </div>
+          </div>
+
+          <div className="px-5 pb-5">
+            {activeTab === 'bank_transfer' && (
+              <div className="bg-amber-50 rounded-xl p-4">
+                <p className="text-amber-800 text-sm leading-relaxed">
+                  {BANK_INFO.bank} · <strong>{BANK_INFO.accountNumber}</strong>
+                  <br />a/n <strong>{BANK_INFO.accountHolder}</strong>
+                  {total > 0 && (
+                    <>
+                      <br />
+                      <span className="text-amber-700">
+                        Amount: <strong>{formatRupiah(total)}</strong>
+                      </span>
+                    </>
+                  )}
+                </p>
+              </div>
             )}
-          </p>
+            {activeTab === 'qris' && (
+              <div className="flex flex-col items-center gap-3 py-4">
+                <div className="w-48 h-48 bg-stone-100 rounded-xl flex items-center justify-center border border-stone-200">
+                  <div className="text-center text-stone-400">
+                    <p className="text-4xl mb-2">📱</p>
+                    <p className="text-xs font-medium">QRIS Coming Soon</p>
+                  </div>
+                </div>
+                <p className="text-xs text-stone-500 text-center">
+                  Scan with your banking or e-wallet app to pay
+                </p>
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* Reassurance + CTA */}
+        {/* Upload proof CTA */}
+        {orderId && (
+          <Link
+            to={`/upload-proof?orderId=${orderId}`}
+            className="block w-full bg-amber-500 hover:bg-amber-600 text-white text-center font-semibold text-sm py-3 rounded-xl transition-colors mb-3"
+          >
+            I've Paid — Upload Proof →
+          </Link>
+        )}
+
+        {/* Reassurance + orders link */}
         <p className="text-center text-xs text-stone-400 mb-4">
           Don't worry — you can always come back to see your order detail on the orders page.
         </p>
