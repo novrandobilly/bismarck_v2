@@ -12,6 +12,9 @@ export interface Order {
   custom_location: string
   notes: string
   is_fulfilled: boolean
+  has_paid: boolean
+  payment_proof_url: string | null
+  payment_method: 'qris' | 'bank_transfer' | null
   created_at: string
   order_items?: OrderItem[]
 }
