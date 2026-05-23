@@ -50,9 +50,10 @@ export function useMenuItemMutations() {
       currentImagePath?: string
     }) => {
       let imagePath = currentImagePath
+      let newImagePath: string | undefined
       if (data.image?.[0]) {
-        imagePath = await uploadImage(data.image[0])
-        if (currentImagePath) await deleteImage(currentImagePath)
+        newImagePath = await uploadImage(data.image[0])
+        imagePath = newImagePath
       }
       const updates: Record<string, unknown> = {}
       if (data.name !== undefined) updates.name = data.name
@@ -66,7 +67,11 @@ export function useMenuItemMutations() {
         .eq('id', id)
         .select()
         .single()
-      if (error) throw error
+      if (error) {
+        if (newImagePath) await deleteImage(newImagePath)
+        throw error
+      }
+      if (newImagePath && currentImagePath) await deleteImage(currentImagePath)
       return item as MenuItem
     },
     onSuccess: invalidate,
