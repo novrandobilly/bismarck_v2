@@ -32,10 +32,13 @@ const schema = z.object({
 })
 
 export function useOrderForm(sessionItems: SessionItem[], session: Session | null) {
+  const allOptions: { type: FulfillmentType; enabled: boolean }[] = [
+    { type: 'pickup', enabled: !!session?.allow_pickup },
+    { type: 'delivery', enabled: !!session?.allow_delivery },
+    { type: 'custom', enabled: (session?.custom_locations?.length ?? 0) > 0 },
+  ]
   const defaultFulfillment: FulfillmentType =
-    session?.allow_pickup ? 'pickup'
-    : session?.allow_delivery ? 'delivery'
-    : 'custom'
+    allOptions.find(o => o.enabled)?.type ?? 'pickup'
 
   const form = useForm<OrderFormValues>({
     resolver: zodResolver(schema) as Resolver<OrderFormValues>,

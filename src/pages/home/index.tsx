@@ -60,13 +60,7 @@ function OpenPOBanner({ session }: { session: Session }) {
           Order Now →
         </Link>
       </div>
-      <div className="border-t border-amber-200 pt-1 flex flex-wrap items-center justify-between gap-1">
-        <Link
-          to={`/session/${session.id}/orders`}
-          className="text-xs text-amber-600 hover:text-amber-800 hover:underline transition-colors"
-        >
-          Already ordered? Check your order status →
-        </Link>
+      <div className="border-t border-amber-200 pt-1 flex flex-wrap items-center justify-end gap-1">
         <Link
           to="/upload-proof"
           className="text-xs text-amber-600 hover:text-amber-800 hover:underline transition-colors"
@@ -80,16 +74,12 @@ function OpenPOBanner({ session }: { session: Session }) {
 
 function PastSessionCard({ session }: { session: Session }) {
   return (
-    <Link
-      to={`/session/${session.id}/orders`}
-      className="block bg-white border border-stone-200 rounded-xl p-4 hover:shadow-sm hover:border-stone-300 transition-all"
-    >
+    <div className="bg-white border border-stone-200 rounded-xl p-4">
       <p className="font-semibold text-stone-700 text-sm">{session.title}</p>
       <p className="text-stone-400 text-xs mt-1">
         Fulfilled: {formatDate(session.fulfillment_date)}
       </p>
-      <p className="text-amber-600 text-xs mt-2">View order list →</p>
-    </Link>
+    </div>
   );
 }
 
