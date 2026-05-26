@@ -159,7 +159,7 @@ export default function SessionNewPage() {
           {error && <p className="text-red-500 text-sm">Failed to create session. Please try again.</p>}
 
           <div className="flex gap-3">
-            <button type="button" onClick={() => navigate('/bismarck/sessions')} className="cursor-pointer flex-1 border border-stone-300 text-stone-700 rounded-xl py-3 text-sm hover:bg-stone-50 transition-colors">Cancel</button>
+            <button type="button" onClick={() => navigate('/bismarck/dashboard')} className="cursor-pointer flex-1 border border-stone-300 text-stone-700 rounded-xl py-3 text-sm hover:bg-stone-50 transition-colors">Cancel</button>
             <button type="submit" disabled={isPending} className="cursor-pointer flex-1 bg-amber-500 hover:bg-amber-600 disabled:opacity-60 text-white font-semibold rounded-xl py-3 text-sm transition-colors">
               {isPending ? 'Creating...' : 'Open Session'}
             </button>

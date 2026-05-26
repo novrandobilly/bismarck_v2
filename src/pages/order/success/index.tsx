@@ -10,7 +10,7 @@ type PaymentTab = 'bank_transfer' | 'qris'
 export default function OrderSuccessPage() {
   const [searchParams] = useSearchParams()
   const orderId = searchParams.get('orderId')
-  const [activeTab, setActiveTab] = useState<PaymentTab>('qris')
+  const [activeTab, setActiveTab] = useState<PaymentTab>('bank_transfer')
 
   const { data: order, isLoading } = useOrderSuccess(orderId)
 
@@ -78,17 +78,6 @@ export default function OrderSuccessPage() {
             <div className="flex gap-2 mb-4">
               <button
                 type="button"
-                onClick={() => setActiveTab('qris')}
-                className={`text-xs font-semibold px-4 py-2 rounded-full border transition-colors ${
-                  activeTab === 'qris'
-                    ? 'bg-amber-500 border-amber-500 text-white'
-                    : 'bg-white border-stone-200 text-stone-500 hover:border-stone-300'
-                }`}
-              >
-                QRIS
-              </button>
-              <button
-                type="button"
                 onClick={() => setActiveTab('bank_transfer')}
                 className={`text-xs font-semibold px-4 py-2 rounded-full border transition-colors ${
                   activeTab === 'bank_transfer'
@@ -98,6 +87,18 @@ export default function OrderSuccessPage() {
               >
                 Bank Transfer
               </button>
+              <div className="relative">
+                <button
+                  type="button"
+                  disabled
+                  className="text-xs font-semibold px-4 py-2 rounded-full border bg-white border-stone-200 text-stone-300 cursor-not-allowed"
+                >
+                  QRIS
+                </button>
+                <span className="absolute -top-2 -right-1 text-[9px] font-bold bg-stone-200 text-stone-500 rounded-full px-1.5 py-0.5 leading-none">
+                  Soon
+                </span>
+              </div>
             </div>
           </div>
 
