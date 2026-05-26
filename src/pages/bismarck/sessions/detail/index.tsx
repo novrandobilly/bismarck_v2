@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useSessionDetail } from "./hooks/useSessionDetail";
 import { useToggleFulfilled } from "./hooks/useToggleFulfilled";
 import { useCloseSession } from "./hooks/useCloseSession";
@@ -11,7 +11,6 @@ import type { Order } from "@/types/order";
 
 export default function SessionDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
   const { data, isLoading } = useSessionDetail(id);
   const { mutate: toggleFulfilled, isPending: isToggling } =
     useToggleFulfilled(id);
@@ -51,12 +50,12 @@ export default function SessionDetailPage() {
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="flex items-start justify-between gap-4 mb-6">
           <div>
-            <button
-              onClick={() => navigate("/bismarck/sessions")}
-              className="cursor-pointer text-xs text-stone-400 hover:text-stone-600 mb-2 flex items-center gap-1"
+            <Link
+              to="/bismarck/dashboard"
+              className="text-xs text-stone-400 hover:text-stone-600 mb-2 flex items-center gap-1"
             >
-              ← Sessions
-            </button>
+              ← Dashboard
+            </Link>
             <h1 className="text-2xl font-bold text-stone-800">
               {session.title}
             </h1>

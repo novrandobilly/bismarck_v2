@@ -1,4 +1,5 @@
 import { supabase } from './index'
+import { generateUUID } from '@/lib/utils/generateUUID'
 
 const BUCKET = 'menu-images'
 
@@ -10,7 +11,7 @@ export function getImageUrl(path: string): string {
 
 export async function uploadImage(file: File): Promise<string> {
   const ext = file.name.split('.').pop() ?? 'jpg'
-  const path = `${crypto.randomUUID()}.${ext}`
+  const path = `${generateUUID()}.${ext}`
   const { error } = await supabase.storage.from(BUCKET).upload(path, file)
   if (error) throw error
   return path
