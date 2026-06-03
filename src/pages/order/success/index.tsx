@@ -1,156 +1,148 @@
-import { useState } from 'react'
-import { useSearchParams, Link } from 'react-router-dom'
-import { useOrderSuccess } from './hooks/useOrderSuccess'
-import { BANK_INFO } from '@/lib/bankInfo'
-import { formatRupiah } from '@/tools/formatRupiah'
-import { LoadingSpinner } from '@/components/LoadingSpinner'
-
-type PaymentTab = 'bank_transfer' | 'qris'
+import { useState } from "react";
+import { useSearchParams, Link } from "react-router-dom";
+import { useOrderSuccess } from "./hooks/useOrderSuccess";
+import { BANK_INFO } from "@/lib/bankInfo";
+import { formatRupiah } from "@/tools/formatRupiah";
+import { LoadingSpinner } from "@/components/LoadingSpinner";
 
 export default function OrderSuccessPage() {
-  const [searchParams] = useSearchParams()
-  const orderId = searchParams.get('orderId')
-  const [activeTab, setActiveTab] = useState<PaymentTab>('bank_transfer')
+  const [searchParams] = useSearchParams();
+  const orderId = searchParams.get("orderId");
+  const [linkCopied, setLinkCopied] = useState(false);
 
-  const { data: order, isLoading } = useOrderSuccess(orderId)
+  const { data: order, isLoading } = useOrderSuccess(orderId);
 
-  const orderItems = order?.order_items ?? []
+  const orderItems = order?.order_items ?? [];
   const total = orderItems.reduce((sum, oi) => {
-    const price = oi.preorder_session_items?.price ?? 0
-    return sum + price * oi.quantity
-  }, 0)
+    const price = oi.preorder_session_items?.price ?? 0;
+    return sum + price * oi.quantity;
+  }, 0);
+
+  function handleCopyLink() {
+    navigator.clipboard.writeText(window.location.href);
+    setLinkCopied(true);
+    setTimeout(() => setLinkCopied(false), 2500);
+  }
 
   return (
     <div className="min-h-screen bg-stone-50">
       <div className="max-w-md mx-auto px-4 py-10">
-
         {/* Confirmation header */}
-        <div className="text-center mb-6">
+        <div className="text-center mb-8">
           <div className="text-5xl mb-3">🎉</div>
-          <h1 className="text-2xl font-bold text-stone-800 mb-1">Order placed!</h1>
-          {order && (
-            <p className="text-stone-500 text-sm">
-              Thanks, {order.customer_name}. Please complete your payment below.
-            </p>
-          )}
-          {!order && !isLoading && (
-            <p className="text-stone-500 text-sm">
-              Your order has been received. Please complete your payment below.
-            </p>
-          )}
+          <h1 className="text-2xl font-bold text-stone-800 mb-1">
+            Order placed!
+          </h1>
+          <p className="text-stone-500 text-sm">
+            {order ? `Thanks, ${order.customer_name}. ` : ""}Complete your
+            payment to confirm.
+          </p>
         </div>
 
-        {/* Bill summary */}
         {isLoading && (
           <div className="flex justify-center py-6">
             <LoadingSpinner />
           </div>
         )}
 
-        {!isLoading && orderItems.length > 0 && (
-          <div className="bg-white rounded-2xl border border-stone-200 px-5 py-4 mb-4">
-            <p className="font-bold text-stone-800 text-sm mb-3">🧾 Your Order</p>
-            <div className="space-y-2 mb-3">
-              {orderItems.map((oi) => {
-                const si = oi.preorder_session_items
-                const name = si?.menu_items?.name ?? 'Item'
-                const price = si?.price ?? 0
-                return (
-                  <div key={oi.id} className="flex justify-between text-sm">
-                    <span className="text-stone-600">{name} ×{oi.quantity}</span>
-                    <span className="font-medium text-stone-800">{formatRupiah(price * oi.quantity)}</span>
-                  </div>
-                )
-              })}
-            </div>
-            <div className="border-t border-stone-100 pt-3 flex justify-between">
-              <span className="font-bold text-stone-900">Total</span>
-              <span className="font-bold text-amber-500 text-base">{formatRupiah(total)}</span>
+        {/* Order + Payment — one card */}
+        {!isLoading && (
+          <div className="bg-white rounded-2xl border border-stone-200 mb-5 overflow-hidden">
+            {/* Order items */}
+            {orderItems.length > 0 && (
+              <div className="px-5 pt-5 pb-4 space-y-2">
+                <p className="text-xs font-semibold uppercase tracking-widest text-stone-400 mb-3">
+                  Your Order
+                </p>
+                {orderItems.map((oi) => {
+                  const si = oi.preorder_session_items;
+                  const name = si?.menu_items?.name ?? "Item";
+                  const price = si?.price ?? 0;
+                  return (
+                    <div key={oi.id} className="flex justify-between text-sm">
+                      <span className="text-stone-600">
+                        {name} ×{oi.quantity}
+                      </span>
+                      <span className="font-medium text-stone-800">
+                        {formatRupiah(price * oi.quantity)}
+                      </span>
+                    </div>
+                  );
+                })}
+                <div className="flex justify-between pt-3 border-t border-stone-100">
+                  <span className="font-bold text-stone-900 text-sm">
+                    Total
+                  </span>
+                  <span className="font-bold text-amber-500">
+                    {formatRupiah(total)}
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {/* Payment info */}
+            <div className="border-t border-stone-100 px-5 py-4">
+              <p className="text-xs font-semibold uppercase tracking-widest text-stone-400 mb-3">
+                Pay to
+              </p>
+              <p className="text-sm text-stone-700 leading-relaxed">
+                {BANK_INFO.bank} ·{" "}
+                <strong className="text-stone-900">
+                  {BANK_INFO.accountNumber}
+                </strong>
+                <br />
+                a/n {BANK_INFO.accountHolder}
+              </p>
+              {total > 0 && (
+                <p className="text-sm text-amber-600 font-semibold mt-1">
+                  {formatRupiah(total)}
+                </p>
+              )}
+              <p className="text-xs text-stone-400 mt-3">QRIS coming soon</p>
             </div>
           </div>
         )}
 
-        {/* Payment instructions */}
-        <div className="bg-white rounded-2xl border border-stone-200 mb-4 overflow-hidden">
-          <div className="px-5 pt-4 pb-0">
-            <p className="font-bold text-stone-800 text-sm mb-3">💳 Complete Payment</p>
-            {/* Tabs */}
-            <div className="flex gap-2 mb-4">
-              <button
-                type="button"
-                onClick={() => setActiveTab('bank_transfer')}
-                className={`text-xs font-semibold px-4 py-2 rounded-full border transition-colors ${
-                  activeTab === 'bank_transfer'
-                    ? 'bg-amber-500 border-amber-500 text-white'
-                    : 'bg-white border-stone-200 text-stone-500 hover:border-stone-300'
-                }`}
-              >
-                Bank Transfer
-              </button>
-              <div className="relative">
-                <button
-                  type="button"
-                  disabled
-                  className="text-xs font-semibold px-4 py-2 rounded-full border bg-white border-stone-200 text-stone-300 cursor-not-allowed"
-                >
-                  QRIS
-                </button>
-                <span className="absolute -top-2 -right-1 text-[9px] font-bold bg-stone-200 text-stone-500 rounded-full px-1.5 py-0.5 leading-none">
-                  Soon
-                </span>
+        {/* Upload proof CTA or paid confirmation */}
+        {orderId &&
+          (order?.has_paid ? (
+            <div className="flex items-center gap-3 bg-green-50 border border-green-200 rounded-2xl px-5 py-4 mb-4">
+              <span className="text-xl">✅</span>
+              <div>
+                <p className="text-sm font-semibold text-green-800">
+                  Payment confirmed
+                </p>
+                <p className="text-xs text-green-700 mt-0.5">
+                  Your order is being prepared.
+                </p>
               </div>
             </div>
-          </div>
+          ) : (
+            <Link
+              to={`/upload-proof?orderId=${orderId}`}
+              className="block w-full bg-amber-500 hover:bg-amber-600 text-white text-center font-semibold text-sm py-3 rounded-xl transition-colors mb-4"
+            >
+              I've Paid — Upload Proof →
+            </Link>
+          ))}
 
-          <div className="px-5 pb-5">
-            {activeTab === 'bank_transfer' && (
-              <div className="bg-amber-50 rounded-xl p-4">
-                <p className="text-amber-800 text-sm leading-relaxed">
-                  {BANK_INFO.bank} · <strong>{BANK_INFO.accountNumber}</strong>
-                  <br />a/n <strong>{BANK_INFO.accountHolder}</strong>
-                  {total > 0 && (
-                    <>
-                      <br />
-                      <span className="text-amber-700">
-                        Amount: <strong>{formatRupiah(total)}</strong>
-                      </span>
-                    </>
-                  )}
-                </p>
-              </div>
-            )}
-            {activeTab === 'qris' && (
-              <div className="flex flex-col items-center gap-3 py-4">
-                <div className="w-48 h-48 bg-stone-100 rounded-xl flex items-center justify-center border border-stone-200">
-                  <div className="text-center text-stone-400">
-                    <p className="text-4xl mb-2">📱</p>
-                    <p className="text-xs font-medium">QRIS Coming Soon</p>
-                  </div>
-                </div>
-                <p className="text-xs text-stone-500 text-center">
-                  Scan with your banking or e-wallet app to pay
-                </p>
-              </div>
-            )}
+        {/* Save link — subtle row */}
+        <div className="border border-dashed border-stone-300 rounded-xl px-4 py-3">
+          <p className="text-xs font-semibold text-stone-500 mb-2">🔗 Save this link to upload proof later</p>
+          <div className="flex items-start gap-2">
+            <p className="text-xs text-stone-400 break-all font-mono flex-1 select-all leading-relaxed">
+              {window.location.href}
+            </p>
+            <button
+              type="button"
+              onClick={handleCopyLink}
+              className="cursor-pointer shrink-0 text-xs font-semibold text-amber-500 hover:text-amber-600 transition-colors"
+            >
+              {linkCopied ? '✓ Copied' : 'Copy'}
+            </button>
           </div>
         </div>
-
-        {/* Upload proof CTA */}
-        {orderId && (
-          <Link
-            to={`/upload-proof?orderId=${orderId}`}
-            className="block w-full bg-amber-500 hover:bg-amber-600 text-white text-center font-semibold text-sm py-3 rounded-xl transition-colors mb-3"
-          >
-            I've Paid — Upload Proof →
-          </Link>
-        )}
-
-        {/* Reassurance */}
-        <p className="text-center text-xs text-stone-400 mb-4">
-          Don't worry — you can always come back to see your order detail on the orders page.
-        </p>
-
       </div>
     </div>
-  )
+  );
 }

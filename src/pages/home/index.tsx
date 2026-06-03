@@ -46,7 +46,7 @@ function OpenPOBanner({ session }: { session: Session }) {
         <div className="hidden sm:flex flex-col items-end gap-3 shrink-0">
           {badge}
           <Link
-            to={`/order/${session.id}`}
+            to={`/order/${session.slug}`}
             className="bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-xl px-6 py-3 text-sm transition-colors text-center"
           >
             Order Now →
@@ -54,18 +54,10 @@ function OpenPOBanner({ session }: { session: Session }) {
         </div>
         {/* Mobile: button full-width below */}
         <Link
-          to={`/order/${session.id}`}
+          to={`/order/${session.slug}`}
           className="sm:hidden bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-xl px-6 py-3 text-sm transition-colors text-center"
         >
           Order Now →
-        </Link>
-      </div>
-      <div className="border-t border-amber-200 pt-1 flex flex-wrap items-center justify-end gap-1">
-        <Link
-          to="/upload-proof"
-          className="text-xs text-amber-600 hover:text-amber-800 hover:underline transition-colors"
-        >
-          Upload payment proof →
         </Link>
       </div>
     </div>
