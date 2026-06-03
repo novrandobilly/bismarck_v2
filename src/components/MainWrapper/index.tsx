@@ -80,33 +80,33 @@ export function GuestWrapper() {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-stone-50 font-sans flex flex-col">
-      <header className="sticky top-0 z-10 bg-white border-b border-stone-100">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <div className="min-h-screen bg-warm-cream font-sans flex flex-col">
+      <header className="sticky top-0 z-10 bg-surface-white border-b border-kraft-border">
+        <div className="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
           <Link to="/">
             <img src={logoBlack} alt="Envien Bagel" className="h-8" />
           </Link>
 
           {/* Desktop nav */}
-          <nav className="hidden sm:flex items-center gap-4 text-sm text-stone-600">
-            <Link to="/" className="hover:text-stone-900 transition-colors">
+          <nav className="hidden sm:flex items-center gap-5 text-sm text-ink-medium">
+            <Link to="/" className="hover:text-ink-dark transition-colors">
               Home
             </Link>
-            <Link to="/menu" className="hover:text-stone-900 transition-colors">
+            <Link to="/menu" className="hover:text-ink-dark transition-colors">
               Menu
             </Link>
             {isAuthenticated && (
               <>
                 <Link
                   to="/bismarck/dashboard"
-                  className="hover:text-stone-900 transition-colors font-medium text-amber-700"
+                  className="hover:text-ink-dark transition-colors font-semibold text-crust-gold"
                 >
                   Dashboard →
                 </Link>
                 <button
                   type="button"
                   onClick={logout}
-                  className="cursor-pointer text-stone-400 hover:text-stone-700 transition-colors"
+                  className="cursor-pointer text-ink-light hover:text-ink-dark transition-colors"
                 >
                   Logout
                 </button>
@@ -114,7 +114,7 @@ export function GuestWrapper() {
             )}
           </nav>
 
-          <HamburgerButton onClick={() => setDrawerOpen(true)} className="text-stone-700" />
+          <HamburgerButton onClick={() => setDrawerOpen(true)} className="text-ink-dark" />
         </div>
       </header>
 
@@ -124,14 +124,14 @@ export function GuestWrapper() {
         onClose={() => setDrawerOpen(false)}
         mascot={mascotBlack}
         mascotAlt="Envien Bagel mascot"
-        drawerBg="bg-stone-50"
+        drawerBg="bg-warm-cream"
       >
         <img src={logoBlack} alt="Envien Bagel" className="h-7 mb-8" />
-        <nav className="flex flex-col gap-1 text-stone-700 text-base font-medium">
-          <Link to="/" onClick={() => setDrawerOpen(false)} className="py-2 hover:text-amber-600 transition-colors">
+        <nav className="flex flex-col gap-1 text-ink-dark text-base font-medium">
+          <Link to="/" onClick={() => setDrawerOpen(false)} className="py-2 hover:text-crust-gold transition-colors">
             Home
           </Link>
-          <Link to="/menu" onClick={() => setDrawerOpen(false)} className="py-2 hover:text-amber-600 transition-colors">
+          <Link to="/menu" onClick={() => setDrawerOpen(false)} className="py-2 hover:text-crust-gold transition-colors">
             Menu
           </Link>
           {isAuthenticated && (
@@ -139,14 +139,14 @@ export function GuestWrapper() {
               <Link
                 to="/bismarck/dashboard"
                 onClick={() => setDrawerOpen(false)}
-                className="py-2 text-amber-700 font-semibold hover:text-amber-600 transition-colors"
+                className="py-2 text-crust-gold font-semibold hover:text-crust-gold-deep transition-colors"
               >
                 Dashboard →
               </Link>
               <button
                 type="button"
                 onClick={() => { logout(); setDrawerOpen(false); }}
-                className="cursor-pointer text-left py-2 text-stone-400 hover:text-stone-700 transition-colors"
+                className="cursor-pointer text-left py-2 text-ink-light hover:text-ink-dark transition-colors"
               >
                 Logout
               </button>
@@ -158,10 +158,10 @@ export function GuestWrapper() {
       <main className="flex-1">
         <Outlet />
       </main>
-      <footer className="border-t border-stone-200">
-        <div className="max-w-7xl mx-auto px-4 py-6 flex items-center justify-between text-xs text-stone-400">
+      <footer className="border-t border-kraft-border">
+        <div className="max-w-3xl mx-auto px-4 py-6 flex items-center justify-between text-xs text-ink-light font-sans">
           <span>© {new Date().getFullYear()} Envien Bagel</span>
-          <span>Made with 🥯 & wild yeast</span>
+          <span>Small batch · Wild yeast · Made to order</span>
         </div>
       </footer>
     </div>

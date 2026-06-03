@@ -11,7 +11,7 @@ export function LoadingSpinner({ size = 'md', centered = false, overlay = false,
   const spinner = (
     <div
       className={cn(
-        'rounded-full border-stone-200 border-t-amber-500 animate-spin',
+        'rounded-full border-kraft-border border-t-crust-gold animate-spin',
         size === 'sm' ? 'w-4 h-4 border-2' : 'w-8 h-8 border-4',
         className,
       )}
@@ -20,7 +20,7 @@ export function LoadingSpinner({ size = 'md', centered = false, overlay = false,
 
   if (overlay) {
     return (
-      <div className="fixed inset-0 z-[60] flex items-center justify-center bg-stone-900/40">
+      <div className="fixed inset-0 z-[60] flex items-center justify-center bg-ink-dark/30">
         {spinner}
       </div>
     )

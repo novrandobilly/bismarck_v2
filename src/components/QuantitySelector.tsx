@@ -32,8 +32,7 @@ export function QuantitySelector({ value, onChange, min = 0, max, className }: P
         type="button"
         onClick={() => { if (value > min) onChange(value - 1) }}
         disabled={value <= min}
-        className="w-8 h-8 rounded-full border border-stone-300 flex items-center justify-center text-stone-700 disabled:opacity-40 hover:bg-stone-100 transition-colors"
-        aria-label="Decrease quantity"
+        className="w-9 h-9 rounded-full border border-kraft-border flex items-center justify-center text-ink-dark disabled:opacity-40 hover:bg-flour-dust transition-colors text-base leading-none"
       >
         −
       </button>
@@ -47,14 +46,14 @@ export function QuantitySelector({ value, onChange, min = 0, max, className }: P
         onChange={(e) => setInputVal(e.target.value)}
         onBlur={(e) => commit(e.target.value)}
         onKeyDown={(e) => { if (e.key === 'Enter') (e.target as HTMLInputElement).blur() }}
-        className="w-8 text-center text-sm font-medium tabular-nums bg-transparent border-b border-transparent focus:border-amber-400 focus:outline-none appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+        className="w-9 text-center text-sm font-medium font-sans tabular-nums bg-transparent border-b border-transparent focus:border-crust-gold focus:outline-none appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
         aria-label="Quantity"
       />
       <button
         type="button"
         onClick={() => { if (max === undefined || value < max) onChange(value + 1) }}
         disabled={max !== undefined && value >= max}
-        className="w-8 h-8 rounded-full border border-stone-300 flex items-center justify-center text-stone-700 disabled:opacity-40 hover:bg-stone-100 transition-colors"
+        className="w-9 h-9 rounded-full border border-kraft-border flex items-center justify-center text-ink-dark disabled:opacity-40 hover:bg-flour-dust transition-colors text-base leading-none"
         aria-label="Increase quantity"
       >
         +

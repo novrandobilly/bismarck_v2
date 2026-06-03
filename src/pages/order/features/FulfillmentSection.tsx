@@ -41,32 +41,34 @@ export function FulfillmentSection({ form, session }: Props) {
 
   return (
     <div className="mb-6">
-      <h2 className="text-base font-bold text-stone-800 mb-3">Fulfillment</h2>
-      <div className="bg-white rounded-2xl shadow-sm px-4 py-4 space-y-3">
+      <p className="font-sans text-[11px] font-semibold text-ink-medium uppercase tracking-[0.12em] mb-3">
+        Fulfillment
+      </p>
+      <div className="bg-surface-white rounded-xl border border-kraft-border px-4 py-4 space-y-3">
         {options.map(opt => (
           <label key={opt.key} className="flex items-center gap-3 cursor-pointer" onClick={() => handleSelect(opt.key)}>
             <input
               type="radio"
               readOnly
               checked={currentKey === opt.key}
-              className="accent-amber-500"
+              className="accent-crust-gold"
             />
             <div>
-              <span className="text-sm text-stone-700">{opt.label}</span>
-              {opt.sublabel && <p className="text-xs text-stone-500">{opt.sublabel}</p>}
+              <span className="font-sans text-sm text-ink-dark">{opt.label}</span>
+              {opt.sublabel && <p className="font-sans text-xs text-ink-medium mt-0.5">{opt.sublabel}</p>}
             </div>
           </label>
         ))}
         {fulfillmentType === 'delivery' && (
           <div className="pt-2">
-            <label className="block text-sm font-medium text-stone-700 mb-1">Delivery Address</label>
+            <label className="block font-sans text-sm font-medium text-ink-dark mb-1">Delivery Address</label>
             <textarea
               {...register('delivery_address')}
               rows={3}
               placeholder="Full address including RT/RW, kelurahan, etc."
-              className={cn('w-full border rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-amber-400 resize-none', errors.delivery_address ? 'border-red-400' : 'border-stone-300')}
+              className={cn('w-full border rounded-lg px-3 py-2 text-sm font-sans outline-none focus:ring-2 focus:ring-crust-gold/40 transition-shadow resize-none', errors.delivery_address ? 'border-red-400' : 'border-kraft-border')}
             />
-            {errors.delivery_address && <p className="text-red-500 text-xs mt-1">{errors.delivery_address.message}</p>}
+            {errors.delivery_address && <p className="font-sans text-red-600 text-xs mt-1">{errors.delivery_address.message}</p>}
           </div>
         )}
       </div>
