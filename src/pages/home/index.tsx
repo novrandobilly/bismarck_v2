@@ -92,7 +92,7 @@ export default function HomePage() {
     <>
       {/* Brand stamp — compact identity before the pre-order card */}
       <header className="bg-warm-cream border-b border-kraft-border-soft">
-        <div className="max-w-2xl mx-auto px-4 pt-5 pb-4 text-center">
+        <div className="max-w-3xl mx-auto px-4 pt-5 pb-4 text-center">
           <h1 className="font-serif text-2xl font-bold text-ink-dark leading-none tracking-tight">
             Envien Bagel
           </h1>
@@ -102,7 +102,7 @@ export default function HomePage() {
         </div>
       </header>
 
-      <main className="max-w-2xl mx-auto px-4 pt-5 pb-10 space-y-12">
+      <main className="max-w-3xl mx-auto px-4 pt-5 pb-10 space-y-12">
         {/* Open PO Section */}
         <section>
           <p className="font-sans text-[11px] font-semibold text-ink-medium uppercase tracking-[0.12em] mb-4">
