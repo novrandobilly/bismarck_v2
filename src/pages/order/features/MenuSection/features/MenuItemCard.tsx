@@ -26,7 +26,7 @@ export function MenuItemCard({
 
   return (
     <div className="flex gap-3 items-center py-3 border-b border-stone-100 last:border-0">
-      <ProductThumbnail item={menuItem} />
+      <ProductThumbnail className="w-28 h-28" item={menuItem} />
       <div className="flex-1 min-w-0">
         <p className="font-semibold text-stone-800 text-sm leading-snug">
           {menuItem.name}
