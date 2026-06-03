@@ -1,14 +1,22 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm, useFieldArray, Controller, type Resolver } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useMenuItems } from '@/hooks/useMenuItems'
 import { useCreateSession, type SessionFormValues } from './hooks/useCreateSession'
+import { useSlugAvailability } from './hooks/useSlugAvailability'
+import { slugify } from '@/tools/slugify'
 import { cn } from '@/lib/utils/cn'
+
+const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 
 const schema = z.object({
   title: z.string().min(1, 'Title is required'),
+  slug: z.string()
+    .min(3, 'Slug must be at least 3 characters')
+    .max(50, 'Slug must be 50 characters or less')
+    .regex(slugRegex, 'Only lowercase letters, numbers, and hyphens (e.g. bagel-juni-w1)'),
   description: z.string().default(''),
   fulfillment_date: z.string().min(1, 'Fulfillment date is required'),
   order_deadline: z.string().min(1, 'Order deadline is required'),
@@ -31,14 +39,26 @@ export default function SessionNewPage() {
   const { data: menuItems = [] } = useMenuItems()
   const { mutate: createSession, isPending, error } = useCreateSession()
 
-  const { register, handleSubmit, control, reset, formState: { errors } } = useForm<FormValues>({
+  const { register, handleSubmit, control, reset, watch, setValue, formState: { errors } } = useForm<FormValues>({
     resolver: zodResolver(schema) as Resolver<FormValues>,
     defaultValues: {
-      title: '', description: '', fulfillment_date: '', order_deadline: '',
+      title: '', slug: '', description: '', fulfillment_date: '', order_deadline: '',
       max_orders: 0, allow_pickup: true, allow_delivery: false,
       custom_locations: [], selectedItems: [],
     },
   })
+
+  const slugTouched = useRef(false)
+  const title = watch('title')
+  const slug = watch('slug')
+  const slugStatus = useSlugAvailability(slug)
+
+  // Auto-fill slug from title until the user manually edits the slug field
+  useEffect(() => {
+    if (!slugTouched.current) {
+      setValue('slug', slugify(title), { shouldValidate: title.length > 0 })
+    }
+  }, [title, setValue])
 
   useEffect(() => {
     if (menuItems.length > 0) {
@@ -81,6 +101,34 @@ export default function SessionNewPage() {
               <label className="block text-sm font-medium text-stone-700 mb-1">Title</label>
               <input {...register('title')} placeholder="e.g. Bagel Batch — May 22" className={cn('w-full border rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-amber-400', errors.title ? 'border-red-400' : 'border-stone-300')} />
               {errors.title && <p className="text-red-500 text-xs mt-1">{errors.title.message}</p>}
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-stone-700 mb-1">Shareable Link Slug</label>
+              <div className={cn('flex items-center border rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-amber-400', errors.slug ? 'border-red-400' : slugStatus === 'taken' ? 'border-red-400' : 'border-stone-300')}>
+                <span className="px-3 py-2 text-xs text-stone-400 bg-stone-50 border-r border-stone-200 shrink-0">/order/</span>
+                <input
+                  {...register('slug')}
+                  placeholder="e.g. bagel-juni-w1"
+                  className="flex-1 px-3 py-2 text-sm outline-none bg-white"
+                  onChange={e => {
+                    slugTouched.current = true
+                    register('slug').onChange(e)
+                  }}
+                />
+                {slug.length >= 3 && (
+                  <span className="px-3 text-xs shrink-0">
+                    {slugStatus === 'checking' && <span className="text-stone-400">…</span>}
+                    {slugStatus === 'available' && <span className="text-green-600">✓ available</span>}
+                    {slugStatus === 'taken' && <span className="text-red-500">✗ taken</span>}
+                  </span>
+                )}
+              </div>
+              {errors.slug
+                ? <p className="text-red-500 text-xs mt-1">{errors.slug.message}</p>
+                : slugStatus === 'taken'
+                  ? <p className="text-red-500 text-xs mt-1">This slug is already in use. Please choose a different one.</p>
+                  : <p className="text-stone-400 text-xs mt-1">Auto-filled from title. Lowercase letters, numbers, hyphens only.</p>
+              }
             </div>
             <div>
               <label className="block text-sm font-medium text-stone-700 mb-1">Description (optional)</label>
@@ -160,7 +208,7 @@ export default function SessionNewPage() {
 
           <div className="flex gap-3">
             <button type="button" onClick={() => navigate('/bismarck/dashboard')} className="cursor-pointer flex-1 border border-stone-300 text-stone-700 rounded-xl py-3 text-sm hover:bg-stone-50 transition-colors">Cancel</button>
-            <button type="submit" disabled={isPending} className="cursor-pointer flex-1 bg-amber-500 hover:bg-amber-600 disabled:opacity-60 text-white font-semibold rounded-xl py-3 text-sm transition-colors">
+            <button type="submit" disabled={isPending || slugStatus === 'taken'} className="cursor-pointer flex-1 bg-amber-500 hover:bg-amber-600 disabled:opacity-60 text-white font-semibold rounded-xl py-3 text-sm transition-colors">
               {isPending ? 'Creating...' : 'Open Session'}
             </button>
           </div>

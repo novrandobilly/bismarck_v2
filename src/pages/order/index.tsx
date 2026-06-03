@@ -27,7 +27,7 @@ export default function OrderPage() {
   const { mutate: submitOrder, isPending, error: submitError } = useSubmitOrder()
 
   function onSubmit(values: OrderFormValues) {
-    submitOrder({ sessionId: sessionId!, values }, {
+    submitOrder({ sessionId: data!.session.id, values }, {
       onSuccess: (orderId) => navigate(`/order/${sessionId}/success?orderId=${orderId}`),
     })
   }

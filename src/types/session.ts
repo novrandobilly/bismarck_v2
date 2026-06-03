@@ -7,6 +7,7 @@ export interface CustomLocation {
 
 export interface Session {
   id: string
+  slug: string
   title: string
   description: string
   fulfillment_date: string

@@ -27,7 +27,7 @@ export default function SessionDetailPage() {
 
   const { session, orders } = data;
   const isOpen = session.status === "open";
-  const shareUrl = `${window.location.origin}/order/${session.id}`;
+  const shareUrl = `${window.location.origin}/order/${session.slug}`;
 
   function handleToggle(order: Order) {
     toggleFulfilled({ orderId: order.id, is_fulfilled: !order.is_fulfilled });
