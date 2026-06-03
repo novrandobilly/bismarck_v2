@@ -9,20 +9,26 @@ export interface SessionData {
   orderCount: number
 }
 
-async function fetchSession(sessionId: string): Promise<SessionData> {
-  const [sessionResult, itemsResult, countResult] = await Promise.all([
-    supabase.from('preorder_sessions').select('*').eq('id', sessionId).single(),
+async function fetchSession(slug: string): Promise<SessionData> {
+  const sessionResult = await supabase
+    .from('preorder_sessions')
+    .select('*')
+    .eq('slug', slug)
+    .single()
+  if (sessionResult.error) throw sessionResult.error
+  const session = sessionResult.data as Session
+
+  const [itemsResult, countResult] = await Promise.all([
     supabase
       .from('preorder_session_items')
       .select('*, menu_items(*)')
-      .eq('preorder_session', sessionId)
+      .eq('preorder_session', session.id)
       .eq('is_available', true),
     supabase
       .from('orders')
       .select('*', { count: 'exact', head: true })
-      .eq('preorder_session', sessionId),
+      .eq('preorder_session', session.id),
   ])
-  if (sessionResult.error) throw sessionResult.error
   if (itemsResult.error) throw itemsResult.error
   if (countResult.error) throw countResult.error
 
@@ -31,17 +37,17 @@ async function fetchSession(sessionId: string): Promise<SessionData> {
   ) as SessionItem[]
 
   return {
-    session: sessionResult.data as Session,
+    session,
     sessionItems,
     orderCount: countResult.count ?? 0,
   }
 }
 
-export function useSession(sessionId: string | undefined) {
+export function useSession(slug: string | undefined) {
   return useQuery({
-    queryKey: ['session', sessionId],
-    queryFn: () => fetchSession(sessionId!),
+    queryKey: ['session', slug],
+    queryFn: () => fetchSession(slug!),
     retry: false,
-    enabled: !!sessionId,
+    enabled: !!slug,
   })
 }

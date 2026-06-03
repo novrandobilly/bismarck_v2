@@ -4,6 +4,7 @@ import type { Session } from '@/types/session'
 
 export interface SessionFormValues {
   title: string
+  slug: string
   description: string
   fulfillment_date: string
   order_deadline: string
@@ -19,6 +20,7 @@ async function createSession(values: SessionFormValues): Promise<Session> {
     .from('preorder_sessions')
     .insert({
       title: values.title,
+      slug: values.slug,
       description: values.description,
       fulfillment_date: new Date(values.fulfillment_date).toISOString(),
       order_deadline: new Date(values.order_deadline).toISOString(),

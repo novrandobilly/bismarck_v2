@@ -39,6 +39,8 @@ export function useOrderForm(sessionItems: SessionItem[], session: Session | nul
   ]
   const defaultFulfillment: FulfillmentType =
     allOptions.find(o => o.enabled)?.type ?? 'pickup'
+  const defaultCustomLocation =
+    defaultFulfillment === 'custom' ? (session?.custom_locations?.[0]?.name ?? '') : ''
 
   const form = useForm<OrderFormValues>({
     resolver: zodResolver(schema) as Resolver<OrderFormValues>,
@@ -47,7 +49,7 @@ export function useOrderForm(sessionItems: SessionItem[], session: Session | nul
       whatsapp: '',
       fulfillment_type: defaultFulfillment,
       delivery_address: '',
-      custom_location: '',
+      custom_location: defaultCustomLocation,
       notes: '',
       items: [],
     },
