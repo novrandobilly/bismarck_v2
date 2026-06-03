@@ -45,30 +45,30 @@ function OrderCard({
   return (
     <div
       className={cn(
-        "bg-white rounded-2xl px-5 py-4 flex items-start gap-4",
+        "bg-surface-white rounded-xl border border-kraft-border px-5 py-4 flex items-start gap-4",
         order.is_fulfilled ? "opacity-60" : "",
       )}
     >
-      <div className="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center text-xs font-bold text-stone-500 shrink-0 mt-0.5">
+      <div className="w-8 h-8 rounded-full bg-flour-dust border border-kraft-border flex items-center justify-center text-xs font-bold font-sans text-ink-medium shrink-0 mt-0.5">
         {index + 1}
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between gap-2 flex-wrap">
           <div>
-            <p className="font-semibold text-stone-800 text-sm">
+            <p className="font-sans font-semibold text-ink-dark text-sm">
               {maskName(order.customer_name)}
             </p>
-            <p className="text-stone-400 text-xs mt-0.5">
+            <p className="font-sans text-ink-light text-xs mt-0.5">
               {maskPhone(order.whatsapp)}
             </p>
           </div>
           <div className="flex items-center gap-2 shrink-0">
             <span
               className={cn(
-                "text-xs font-semibold px-2.5 py-1 rounded-full",
+                "font-sans text-xs font-semibold px-2.5 py-1 rounded-full",
                 order.is_fulfilled
-                  ? "bg-green-100 text-green-700"
-                  : "bg-amber-50 text-amber-700",
+                  ? "bg-session-open-bg text-session-open-text"
+                  : "bg-flour-dust text-ink-medium",
               )}
             >
               {order.is_fulfilled ? "✓ Ready" : "Processing"}
@@ -76,9 +76,9 @@ function OrderCard({
             <button
               type="button"
               onClick={onViewBill}
-              className="text-xs font-semibold bg-amber-500 hover:bg-amber-600 text-white px-3 py-1 rounded-full transition-colors"
+              className="cursor-pointer font-sans text-xs font-semibold bg-ink-dark hover:bg-ink-medium text-surface-white px-3 py-1 rounded-full transition-colors"
             >
-              View Bill →
+              View Bill
             </button>
           </div>
         </div>
@@ -87,7 +87,7 @@ function OrderCard({
             {orderItems.map((oi) => {
               const name = oi.preorder_session_items?.menu_items?.name ?? "Item";
               return (
-                <p key={oi.id} className="text-xs text-stone-500">
+                <p key={oi.id} className="font-sans text-xs text-ink-medium">
                   {oi.quantity}× {name}
                 </p>
               );
@@ -106,7 +106,7 @@ export default function SessionOrdersPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-stone-50">
+      <div className="min-h-screen flex items-center justify-center bg-warm-cream">
         <LoadingSpinner centered />
       </div>
     );
@@ -114,13 +114,12 @@ export default function SessionOrdersPage() {
 
   if (isError || !data) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-stone-50 px-4 text-center">
+      <div className="min-h-screen flex items-center justify-center bg-warm-cream px-4 text-center">
         <div>
-          <p className="text-3xl mb-2">😕</p>
-          <p className="text-stone-600 font-medium">Session not found</p>
+          <p className="font-serif text-lg font-semibold text-ink-dark mb-1">Session not found</p>
           <Link
             to="/"
-            className="text-amber-600 text-sm mt-2 inline-block hover:underline"
+            className="font-sans text-crust-gold text-sm mt-2 inline-block hover:underline"
           >
             ← Back to home
           </Link>
@@ -133,65 +132,64 @@ export default function SessionOrdersPage() {
   const fulfilled = orders.filter((o) => o.is_fulfilled).length;
 
   return (
-    <div className="min-h-screen bg-stone-50">
+    <div className="min-h-screen bg-warm-cream">
       <div className="max-w-2xl mx-auto px-4 py-8">
         <div className="mb-6">
           <Link
             to="/"
-            className="text-xs text-stone-400 hover:text-stone-600 mb-3 inline-flex items-center gap-1"
+            className="font-sans text-xs text-ink-light hover:text-ink-dark mb-3 inline-flex items-center gap-1 transition-colors"
           >
             ← Home
           </Link>
-          <h1 className="text-2xl font-bold text-stone-800">{session.title}</h1>
-          <p className="text-stone-500 text-sm mt-0.5">
+          <h1 className="font-serif text-2xl font-bold text-ink-dark">{session.title}</h1>
+          <p className="font-sans text-ink-medium text-sm mt-0.5">
             Pick-up: {formatDate(session.fulfillment_date)}
           </p>
         </div>
 
-        <div className="bg-white rounded-2xl px-5 py-4 mb-6 flex items-center justify-between gap-4">
+        <div className="bg-surface-white rounded-xl border border-kraft-border px-5 py-4 mb-6 flex items-center justify-between gap-4">
           <div>
-            <p className="text-2xl font-extrabold text-stone-800">{orders.length}</p>
-            <p className="text-xs text-stone-400 mt-0.5">Total orders</p>
+            <p className="font-serif text-2xl font-bold text-ink-dark">{orders.length}</p>
+            <p className="font-sans text-xs text-ink-light mt-0.5">Total orders</p>
           </div>
           <div className="text-right">
-            <p className="text-2xl font-extrabold text-green-600">{fulfilled}</p>
-            <p className="text-xs text-stone-400 mt-0.5">Ready for pickup</p>
+            <p className="font-serif text-2xl font-bold text-session-open-text">{fulfilled}</p>
+            <p className="font-sans text-xs text-ink-light mt-0.5">Ready for pickup</p>
           </div>
           <div className="flex-1 max-w-30">
-            <div className="h-2 bg-stone-100 rounded-full overflow-hidden">
+            <div className="h-1.5 bg-flour-dust rounded-full overflow-hidden">
               <div
-                className="h-full bg-green-400 rounded-full transition-all"
+                className="h-full bg-session-open-dot rounded-full transition-all"
                 style={{
                   width: orders.length ? `${(fulfilled / orders.length) * 100}%` : "0%",
                 }}
               />
             </div>
-            <p className="text-xs text-stone-400 mt-1 text-right">
+            <p className="font-sans text-xs text-ink-light mt-1 text-right">
               {orders.length ? Math.round((fulfilled / orders.length) * 100) : 0}% ready
             </p>
           </div>
         </div>
 
-        <div className="bg-amber-50 border border-amber-200 rounded-2xl px-5 py-4 mb-6">
-          <p className="font-bold text-amber-900 text-sm mb-1">💳 How to Pay</p>
-          <p className="text-amber-800 text-sm leading-relaxed">
-            {BANK_INFO.bank} · <strong>{BANK_INFO.accountNumber}</strong> · a/n{" "}
-            <strong>{BANK_INFO.accountHolder}</strong>
+        <div className="bg-crust-gold-light border border-kraft-border rounded-xl px-5 py-4 mb-6">
+          <p className="font-serif font-semibold text-ink-dark text-sm mb-1">How to Pay</p>
+          <p className="font-sans text-ink-medium text-sm leading-relaxed">
+            {BANK_INFO.bank} · <strong className="text-ink-dark">{BANK_INFO.accountNumber}</strong> · a/n{" "}
+            <strong className="text-ink-dark">{BANK_INFO.accountHolder}</strong>
           </p>
-          <p className="text-amber-700 text-xs mt-1">
-            Forgot your bill details? No worries — tap <strong>View Bill</strong> next to your name below 👇
+          <p className="font-sans text-ink-medium text-xs mt-1">
+            Forgot your bill? Tap <strong>View Bill</strong> next to your name below.
           </p>
         </div>
 
         {orders.length === 0 ? (
-          <div className="text-center py-16 text-stone-400">
-            <p className="text-4xl mb-3">🥯</p>
-            <p className="font-medium text-stone-600">No orders yet</p>
-            <p className="text-sm mt-1">Be the first to order!</p>
+          <div className="text-center py-16">
+            <p className="font-serif text-lg font-semibold text-ink-dark mb-1">No orders yet</p>
+            <p className="font-sans text-ink-medium text-sm">Be the first to order!</p>
           </div>
         ) : (
           <div className="space-y-3">
-            <p className="text-xs font-bold uppercase tracking-widest text-stone-400 mb-2">
+            <p className="font-sans text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-medium mb-2">
               Order List
             </p>
             {orders.map((order, i) => (

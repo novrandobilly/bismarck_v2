@@ -16,60 +16,45 @@ function formatDate(dateStr: string) {
 }
 
 function OpenPOBanner({ session }: { session: Session }) {
-  const badge = (
-    <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-green-700 bg-green-100 rounded-full px-2.5 py-1 shrink-0">
-      <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-      Pre-Order Open
-    </span>
-  );
-
   return (
-    <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6 pb-2 flex flex-col gap-3">
-      <div className="flex flex-col sm:flex-row sm:items-start gap-4">
-        <div className="flex-1">
-          {/* Mobile: title + badge in same row */}
-          <div className="flex items-start justify-between gap-3 sm:block">
-            <h3 className="text-lg font-bold text-stone-800 leading-snug">
-              {session.title}
-            </h3>
-            <span className="sm:hidden">{badge}</span>
-          </div>
-          {session.description && (
-            <p className="text-stone-600 text-sm mt-1">{session.description}</p>
-          )}
-          <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-xs text-stone-500">
-            <span>📅 Ready: {formatDate(session.fulfillment_date)}</span>
-            <span>⏰ Order by: {formatDate(session.order_deadline)}</span>
-          </div>
-        </div>
-        {/* Desktop: badge above button in right column */}
-        <div className="hidden sm:flex flex-col items-end gap-3 shrink-0">
-          {badge}
-          <Link
-            to={`/order/${session.slug}`}
-            className="bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-xl px-6 py-3 text-sm transition-colors text-center"
-          >
-            Order Now →
-          </Link>
-        </div>
-        {/* Mobile: button full-width below */}
-        <Link
-          to={`/order/${session.slug}`}
-          className="sm:hidden bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-xl px-6 py-3 text-sm transition-colors text-center"
-        >
-          Order Now →
-        </Link>
+    <div className="bg-crust-gold-light border border-kraft-border rounded-2xl p-5">
+      <div className="flex items-center gap-2 mb-3">
+        <span className="inline-flex items-center gap-1.5 font-sans text-xs font-semibold text-session-open-text bg-session-open-bg rounded-full px-2.5 py-1">
+          <span className="w-1.5 h-1.5 rounded-full bg-session-open-dot animate-pulse" />
+          Pre-Order Open
+        </span>
       </div>
+      <h3 className="font-serif text-xl font-bold text-ink-dark leading-snug mb-1">
+        {session.title}
+      </h3>
+      {session.description && (
+        <p className="font-sans text-ink-medium text-sm mb-3 leading-relaxed">
+          {session.description}
+        </p>
+      )}
+      <div className="flex flex-wrap gap-x-4 gap-y-1 mb-4 font-sans text-xs text-ink-medium">
+        <span>Ready {formatDate(session.fulfillment_date)}</span>
+        <span>·</span>
+        <span>Order by {formatDate(session.order_deadline)}</span>
+      </div>
+      <Link
+        to={`/order/${session.slug}`}
+        className="inline-block bg-crust-gold hover:bg-crust-gold-deep text-ink-dark font-sans font-semibold rounded-[14px] px-6 py-3 text-sm transition-colors w-full sm:w-auto text-center"
+      >
+        Order Now
+      </Link>
     </div>
   );
 }
 
 function PastSessionCard({ session }: { session: Session }) {
   return (
-    <div className="bg-white border border-stone-200 rounded-xl p-4">
-      <p className="font-semibold text-stone-700 text-sm">{session.title}</p>
-      <p className="text-stone-400 text-xs mt-1">
-        Fulfilled: {formatDate(session.fulfillment_date)}
+    <div className="bg-surface-white border border-kraft-border rounded-[14px] p-4">
+      <p className="font-serif text-[14px] font-semibold text-ink-dark leading-snug">
+        {session.title}
+      </p>
+      <p className="font-sans text-ink-light text-xs mt-1">
+        Fulfilled {formatDate(session.fulfillment_date)}
       </p>
     </div>
   );
@@ -105,28 +90,24 @@ export default function HomePage() {
 
   return (
     <>
-      {/* Hero */}
-      <header className="bg-white border-b border-stone-100">
-        <div className="max-w-7xl mx-auto px-4 py-10 flex flex-col items-center text-center">
-          <p className="text-amber-500 font-semibold text-sm tracking-widest uppercase mb-2">
-            Homemade · Small Batch
-          </p>
-          <h1 className="text-4xl sm:text-5xl font-extrabold text-stone-900 leading-tight">
+      {/* Brand stamp — compact identity before the pre-order card */}
+      <header className="bg-warm-cream border-b border-kraft-border-soft">
+        <div className="max-w-2xl mx-auto px-4 pt-5 pb-4 text-center">
+          <h1 className="font-serif text-2xl font-bold text-ink-dark leading-none tracking-tight">
             Envien Bagel
           </h1>
-          <p className="text-stone-500 mt-3 max-w-sm text-base">
-            Sourdough bagels baked with wild yeast, slow fermentation, and a lot
-            of love — available by pre-order only.
+          <p className="font-sans text-[11px] font-medium text-ink-medium mt-1.5 tracking-[0.08em]">
+            Homemade · Small Batch · Sourdough
           </p>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 py-10 space-y-14">
+      <main className="max-w-2xl mx-auto px-4 pt-5 pb-10 space-y-12">
         {/* Open PO Section */}
         <section>
-          <h2 className="text-xs font-bold text-stone-400 uppercase tracking-widest mb-4">
+          <p className="font-sans text-[11px] font-semibold text-ink-medium uppercase tracking-[0.12em] mb-4">
             Current Pre-Order
-          </h2>
+          </p>
           {isLoading ? (
             <div className="h-32 flex items-center justify-center">
               <LoadingSpinner centered />
@@ -134,14 +115,12 @@ export default function HomePage() {
           ) : openSession ? (
             <OpenPOBanner session={openSession} />
           ) : (
-            <div className="bg-white border border-stone-200 rounded-2xl p-6 text-center text-stone-400">
-              <p className="text-3xl mb-2">😴</p>
-              <p className="font-medium text-stone-600">
+            <div className="bg-surface-white border border-kraft-border rounded-2xl p-6 text-center">
+              <p className="font-serif text-lg font-semibold text-ink-dark mb-1">
                 No open pre-order right now
               </p>
-              <p className="text-sm mt-1">
-                Check back soon — we bake in small batches and open sessions
-                periodically.
+              <p className="font-sans text-ink-medium text-sm leading-relaxed">
+                We bake in small batches and open sessions periodically. Check back soon.
               </p>
             </div>
           )}
@@ -150,13 +129,11 @@ export default function HomePage() {
         {/* Past Sessions Section */}
         {(isLoading || closedSessions.length > 0) && (
           <section>
-            <h2 className="text-xs font-bold text-stone-400 uppercase tracking-widest mb-4">
+            <p className="font-sans text-[11px] font-semibold text-ink-medium uppercase tracking-[0.12em] mb-4">
               Past Pre-Orders
-            </h2>
+            </p>
             {isLoading ? (
-              <div className="flex items-center justify-center py-8">
-                <LoadingSpinner centered />
-              </div>
+              <LoadingSpinner centered />
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {closedSessions.map((s) => (
@@ -167,34 +144,27 @@ export default function HomePage() {
           </section>
         )}
 
-        {/* About Sourdough Bagels */}
+        {/* What Makes It Special */}
         <section>
-          <h2 className="text-xs font-bold text-stone-400 uppercase tracking-widest mb-4">
+          <p className="font-sans text-[11px] font-semibold text-ink-medium uppercase tracking-[0.12em] mb-6">
             What Makes It Special
-          </h2>
-          <div className="bg-white border border-stone-200 rounded-2xl overflow-hidden">
-            {/* Image placeholder */}
-            <div className="w-full h-52 bg-amber-100 flex items-center justify-center">
-              <div className="text-center text-amber-400">
-                <p className="text-5xl">🥯</p>
-                <p className="text-xs mt-2 font-medium tracking-wide uppercase">
-                  Sourdough Bagels
-                </p>
-              </div>
-            </div>
-            <div className="p-6 grid sm:grid-cols-2 gap-5">
-              {BAGEL_FACTS.map((fact) => (
-                <div key={fact.title} className="flex gap-3">
-                  <span className="text-2xl shrink-0">{fact.icon}</span>
-                  <div>
-                    <p className="font-semibold text-stone-800 text-sm">
-                      {fact.title}
-                    </p>
-                    <p className="text-stone-500 text-sm mt-0.5">{fact.body}</p>
-                  </div>
+          </p>
+          <div className="space-y-6">
+            {BAGEL_FACTS.map((fact) => (
+              <div key={fact.title} className="flex gap-4">
+                <div className="w-10 h-10 rounded-xl bg-flour-dust border border-kraft-border-soft flex items-center justify-center text-lg shrink-0">
+                  {fact.icon}
                 </div>
-              ))}
-            </div>
+                <div>
+                  <p className="font-serif text-[15px] font-semibold text-ink-dark leading-snug">
+                    {fact.title}
+                  </p>
+                  <p className="font-sans text-ink-medium text-[14px] mt-1 leading-relaxed max-w-[55ch]">
+                    {fact.body}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
         </section>
       </main>

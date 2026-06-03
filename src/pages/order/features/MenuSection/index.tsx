@@ -24,12 +24,16 @@ export function MenuSection({ sessionItems, form }: Props) {
 
   return (
     <div className="mb-6">
-      <h2 className="text-base font-bold text-stone-800 mb-1">Menu</h2>
+      <p className="font-sans text-[11px] font-semibold text-ink-medium uppercase tracking-[0.12em] mb-3">
+        Menu
+      </p>
       {itemsError && typeof itemsError === 'object' && 'message' in itemsError &&
         (itemsError as { message?: string }).message && (
-        <p className="text-red-500 text-xs mb-2">{(itemsError as { message?: string }).message}</p>
+        <p className="font-sans text-red-600 text-xs mb-2">
+          {(itemsError as { message?: string }).message}
+        </p>
       )}
-      <div className="bg-white rounded-2xl shadow-sm px-4">
+      <div className="bg-surface-white rounded-xl border border-kraft-border divide-y divide-kraft-border-soft">
         {sessionItems.map(si => (
           <MenuItemCard
             key={si.id}

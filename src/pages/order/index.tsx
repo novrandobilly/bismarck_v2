@@ -36,7 +36,7 @@ export default function OrderPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-stone-50">
+      <div className="min-h-screen flex items-center justify-center bg-warm-cream">
         <LoadingSpinner centered />
       </div>
     )
@@ -44,10 +44,10 @@ export default function OrderPage() {
 
   if (error || !data) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-stone-50 px-4">
+      <div className="min-h-screen flex items-center justify-center bg-warm-cream px-4">
         <div className="text-center">
-          <p className="text-2xl font-bold text-stone-700 mb-2">Session Not Found</p>
-          <p className="text-stone-500">This pre-order link is invalid or has been removed.</p>
+          <p className="font-serif text-2xl font-bold text-ink-dark mb-2">Session Not Found</p>
+          <p className="font-sans text-ink-medium text-sm">This pre-order link is invalid or has been removed.</p>
         </div>
       </div>
     )
@@ -55,17 +55,17 @@ export default function OrderPage() {
 
   if (isSessionClosed(data.session, data.orderCount)) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-stone-50 px-4">
+      <div className="min-h-screen flex items-center justify-center bg-warm-cream px-4">
         <div className="text-center">
-          <p className="text-2xl font-bold text-stone-700 mb-2">Pre-Order Closed</p>
-          <p className="text-stone-500">This pre-order session is no longer accepting orders.</p>
+          <p className="font-serif text-2xl font-bold text-ink-dark mb-2">Pre-Order Closed</p>
+          <p className="font-sans text-ink-medium text-sm">This pre-order session is no longer accepting orders.</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-stone-50">
+    <div className="min-h-screen bg-warm-cream">
       <div className="max-w-2xl mx-auto px-4 py-6">
         <SessionHeader session={data.session} />
         <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -73,12 +73,16 @@ export default function OrderPage() {
           <CustomerDetails form={form} />
           <FulfillmentSection form={form} session={data.session} />
           <NotesSection form={form} />
-          {submitError && <p className="text-red-500 text-sm text-center mb-3">Something went wrong. Please try again.</p>}
+          {submitError && (
+            <p className="font-sans text-red-600 text-sm text-center mb-3">
+              Something went wrong. Please try again.
+            </p>
+          )}
           <button
             type="submit"
             disabled={isPending}
             aria-label={isPending ? 'Loading…' : undefined}
-            className="cursor-pointer w-full bg-amber-500 hover:bg-amber-600 disabled:opacity-60 text-white font-semibold rounded-xl py-3 text-sm transition-colors mb-8"
+            className="cursor-pointer w-full bg-crust-gold hover:bg-crust-gold-deep disabled:opacity-60 text-ink-dark font-sans font-semibold rounded-[14px] py-3.5 text-sm transition-colors mb-8"
           >
            {isPending ? <LoadingSpinner size="sm" /> : 'Place Order'}
           </button>

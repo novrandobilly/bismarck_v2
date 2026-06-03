@@ -13,7 +13,7 @@ export function ProductThumbnail({ item, className }: Props) {
   return (
     <div
       className={cn(
-        "w-28 h-28 rounded-lg overflow-hidden bg-stone-100 flex items-center justify-center shrink-0",
+        "w-28 h-28 rounded-xl overflow-hidden bg-flour-dust flex items-center justify-center shrink-0",
         className,
       )}
     >
