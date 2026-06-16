@@ -1,13 +1,14 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { useSession } from './hooks/useSession'
 import { useOrderForm } from './hooks/useOrderForm'
-import { useSubmitOrder } from './hooks/useSubmitOrder'
 import { SessionHeader } from './features/SessionHeader'
 import { MenuSection } from './features/MenuSection'
 import { CustomerDetails } from './features/CustomerDetails'
 import { FulfillmentSection } from './features/FulfillmentSection'
 import { NotesSection } from './features/NotesSection'
 import { LoadingSpinner } from '@/components/LoadingSpinner'
+import { useModal } from '@/lib/modal/useModal'
+import { ConfirmationModal } from './features/ConfirmationModal'
 import type { Session } from '@/types/session'
 import type { OrderFormValues } from '@/types/order'
 
@@ -23,13 +24,23 @@ export default function OrderPage() {
   const { sessionId } = useParams<{ sessionId: string }>()
   const { data, isLoading, error } = useSession(sessionId)
   const form = useOrderForm(data?.sessionItems ?? [], data?.session ?? null)
+  const { open: openModal, close: closeModal } = useModal()
   const navigate = useNavigate()
-  const { mutate: submitOrder, isPending, error: submitError } = useSubmitOrder()
 
   function onSubmit(values: OrderFormValues) {
-    submitOrder({ sessionId: data!.session.id, values }, {
-      onSuccess: (orderId) => navigate(`/order/${sessionId}/success?orderId=${orderId}`),
-    })
+    if (!data) return
+    openModal(
+      <ConfirmationModal
+        values={values}
+        sessionId={data.session.id}
+        sessionItems={data.sessionItems}
+        onCancel={closeModal}
+        onSuccess={(orderId) => {
+          closeModal()
+          navigate(`/order/${sessionId}/success?orderId=${orderId}`)
+        }}
+      />
+    )
   }
 
   if (!sessionId) return null
@@ -73,18 +84,11 @@ export default function OrderPage() {
           <CustomerDetails form={form} />
           <FulfillmentSection form={form} session={data.session} />
           <NotesSection form={form} />
-          {submitError && (
-            <p className="font-sans text-red-600 text-sm text-center mb-3">
-              Something went wrong. Please try again.
-            </p>
-          )}
           <button
             type="submit"
-            disabled={isPending}
-            aria-label={isPending ? 'Loading…' : undefined}
-            className="cursor-pointer w-full bg-crust-gold hover:bg-crust-gold-deep disabled:opacity-60 text-ink-dark font-sans font-semibold rounded-[14px] py-3.5 text-sm transition-colors mb-8"
+            className="cursor-pointer w-full bg-crust-gold hover:bg-crust-gold-deep text-ink-dark font-sans font-semibold rounded-[14px] py-3.5 text-sm transition-colors mb-8"
           >
-           {isPending ? <LoadingSpinner size="sm" /> : 'Place Order'}
+            Place Order
           </button>
         </form>
       </div>
