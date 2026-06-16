@@ -1,11 +1,12 @@
 import { useState, useRef } from 'react'
-import { useSearchParams, Link } from 'react-router-dom'
+import { useSearchParams, Link, useNavigate } from 'react-router-dom'
 import { useUploadProof } from './hooks/useUploadProof'
 
 const MAX_FILE_SIZE_MB = 5
 
 export default function UploadProofPage() {
   const [searchParams] = useSearchParams()
+  const navigate = useNavigate()
   const [orderId, setOrderId] = useState(searchParams.get('orderId') ?? '')
   const [file, setFile] = useState<File | null>(null)
   const [fileError, setFileError] = useState<string | null>(null)
@@ -46,12 +47,21 @@ export default function UploadProofPage() {
           <p className="font-sans text-ink-medium text-sm mb-6 leading-relaxed">
             We'll verify your payment and update your order status shortly.
           </p>
-          <Link
-            to="/"
-            className="block bg-ink-dark hover:bg-ink-medium text-surface-white text-center font-sans font-semibold text-sm py-3 rounded-[14px] transition-colors"
-          >
-            Back to Home
-          </Link>
+          <div className="space-y-2">
+            <button
+              type="button"
+              onClick={() => navigate(-1)}
+              className="cursor-pointer block w-full bg-ink-dark hover:bg-ink-medium text-surface-white text-center font-sans font-semibold text-sm py-3 rounded-[14px] transition-colors"
+            >
+              Back to Order Details
+            </button>
+            <Link
+              to="/"
+              className="block border border-kraft-border hover:bg-flour-dust text-ink-medium hover:text-ink-dark text-center font-sans font-semibold text-sm py-3 rounded-[14px] transition-colors"
+            >
+              Back to Home
+            </Link>
+          </div>
         </div>
       </div>
     )
@@ -60,6 +70,13 @@ export default function UploadProofPage() {
   return (
     <div className="min-h-screen bg-warm-cream">
       <div className="max-w-md mx-auto px-4 py-10">
+        <button
+          type="button"
+          onClick={() => navigate(-1)}
+          className="cursor-pointer flex items-center gap-1.5 text-xs font-semibold font-sans text-ink-medium hover:text-ink-dark transition-colors mb-6"
+        >
+          ← Back
+        </button>
         <h1 className="font-serif text-2xl font-bold text-ink-dark mb-1">Upload Payment Proof</h1>
         <p className="font-sans text-ink-medium text-sm mb-6 leading-relaxed">
           Send us a screenshot of your transfer or QRIS payment.

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { useOrderSuccess } from "./hooks/useOrderSuccess";
 import { BANK_INFO } from "@/lib/bankInfo";
@@ -9,6 +9,10 @@ import QREnvienBagel from "@/assets/envien-bagel-qr.png";
 type PaymentTab = "transfer" | "qris";
 
 export default function OrderSuccessPage() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const [searchParams] = useSearchParams();
   const orderId = searchParams.get("orderId");
   const [linkCopied, setLinkCopied] = useState(false);
