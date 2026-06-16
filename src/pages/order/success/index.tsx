@@ -4,6 +4,7 @@ import { useOrderSuccess } from "./hooks/useOrderSuccess";
 import { BANK_INFO } from "@/lib/bankInfo";
 import { formatRupiah } from "@/tools/formatRupiah";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
+import QREnvienBagel from "@/assets/envien-bagel-qr.png";
 
 type PaymentTab = "transfer" | "qris";
 
@@ -11,7 +12,7 @@ export default function OrderSuccessPage() {
   const [searchParams] = useSearchParams();
   const orderId = searchParams.get("orderId");
   const [linkCopied, setLinkCopied] = useState(false);
-  const [paymentTab, setPaymentTab] = useState<PaymentTab>("transfer");
+  const [paymentTab, setPaymentTab] = useState<PaymentTab>("qris");
 
   const { data: order, isLoading } = useOrderSuccess(orderId);
 
@@ -25,6 +26,15 @@ export default function OrderSuccessPage() {
     navigator.clipboard.writeText(window.location.href);
     setLinkCopied(true);
     setTimeout(() => setLinkCopied(false), 2500);
+  }
+
+  function handleDownloadQR() {
+    const link = document.createElement("a");
+    link.href = QREnvienBagel;
+    link.download = "envien-bagel-qr.png";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 
   return (
@@ -87,17 +97,6 @@ export default function OrderSuccessPage() {
               <div className="flex border-b border-kraft-border">
                 <button
                   type="button"
-                  onClick={() => setPaymentTab("transfer")}
-                  className={`flex-1 py-3 font-sans text-[13px] font-semibold transition-colors ${
-                    paymentTab === "transfer"
-                      ? "text-ink-dark border-b-2 border-crust-gold -mb-px"
-                      : "text-ink-light hover:text-ink-medium"
-                  }`}
-                >
-                  Bank Transfer
-                </button>
-                <button
-                  type="button"
                   onClick={() => setPaymentTab("qris")}
                   className={`flex-1 py-3 font-sans text-[13px] font-semibold transition-colors ${
                     paymentTab === "qris"
@@ -106,6 +105,17 @@ export default function OrderSuccessPage() {
                   }`}
                 >
                   QRIS
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPaymentTab("transfer")}
+                  className={`flex-1 py-3 font-sans text-[13px] font-semibold transition-colors ${
+                    paymentTab === "transfer"
+                      ? "text-ink-dark border-b-2 border-crust-gold -mb-px"
+                      : "text-ink-light hover:text-ink-medium"
+                  }`}
+                >
+                  Bank Transfer
                 </button>
               </div>
 
@@ -134,28 +144,13 @@ export default function OrderSuccessPage() {
               {/* QRIS panel */}
               {paymentTab === "qris" && (
                 <div className="px-5 py-5 flex flex-col items-center text-center">
-                  {/* QR placeholder */}
-                  <div className="w-44 h-44 rounded-xl border-2 border-kraft-border bg-flour-dust flex flex-col items-center justify-center mb-3">
-                    {/* Minimal QR pattern using CSS grid */}
-                    <div className="grid grid-cols-7 gap-[2px] opacity-30 mb-2" aria-hidden>
-                      {[
-                        1,1,1,1,1,1,1,
-                        1,0,0,0,0,0,1,
-                        1,0,1,0,1,0,1,
-                        1,0,0,0,0,0,1,
-                        1,0,1,0,1,0,1,
-                        1,0,0,0,0,0,1,
-                        1,1,1,1,1,1,1,
-                      ].map((cell, i) => (
-                        <div
-                          key={i}
-                          className={`w-3 h-3 rounded-[1px] ${cell ? "bg-ink-dark" : "bg-transparent"}`}
-                        />
-                      ))}
-                    </div>
-                    <p className="font-sans text-[10px] font-bold text-ink-medium uppercase tracking-widest mt-1">
-                      QRIS
-                    </p>
+                  {/* QR code */}
+                  <div className="w-full h-full rounded-xl border-2 border-kraft-border bg-flour-dust flex flex-col items-center justify-center mb-3 overflow-hidden">
+                    <img
+                      src={QREnvienBagel}
+                      alt="QRIS QR Code"
+                      className="w-full h-full object-cover"
+                    />
                   </div>
 
                   <p className="font-sans text-xs font-semibold text-ink-dark mb-0.5">
@@ -171,9 +166,17 @@ export default function OrderSuccessPage() {
                     </p>
                   )}
 
-                  <p className="font-sans text-[11px] text-ink-light leading-relaxed max-w-[22ch]">
+                  <p className="font-sans text-[11px] text-ink-light leading-relaxed max-w-[22ch] mb-3">
                     Scan with any mobile banking or e-wallet app
                   </p>
+
+                  <button
+                    type="button"
+                    onClick={handleDownloadQR}
+                    className="text-xs font-semibold font-sans text-crust-gold hover:text-crust-gold-deep transition-colors"
+                  >
+                    ↓ Save QR Code
+                  </button>
                 </div>
               )}
             </div>
@@ -184,7 +187,9 @@ export default function OrderSuccessPage() {
         {orderId &&
           (order?.has_paid ? (
             <div className="flex items-center gap-3 bg-session-open-bg border border-session-open-dot/20 rounded-2xl px-5 py-4 mb-4">
-              <span className="text-session-open-text text-xl font-bold">✓</span>
+              <span className="text-session-open-text text-xl font-bold">
+                ✓
+              </span>
               <div>
                 <p className="font-sans text-sm font-semibold text-session-open-text">
                   Payment confirmed
@@ -205,9 +210,11 @@ export default function OrderSuccessPage() {
 
         {/* Save link */}
         <div className="border border-dashed border-kraft-border rounded-xl px-4 py-3">
-          <p className="font-sans text-xs font-semibold text-ink-medium mb-2">Save this link to upload proof later</p>
+          <p className="font-sans text-xs font-semibold text-ink-medium mb-2">
+            Save this link to upload proof later
+          </p>
           <div className="flex items-start gap-2">
-            <p className="font-sans text-xs text-ink-light break-all font-mono flex-1 select-all leading-relaxed">
+            <p className="text-xs text-ink-light break-all font-mono flex-1 select-all leading-relaxed">
               {window.location.href}
             </p>
             <button
@@ -215,7 +222,7 @@ export default function OrderSuccessPage() {
               onClick={handleCopyLink}
               className="cursor-pointer shrink-0 text-xs font-semibold font-sans text-crust-gold hover:text-crust-gold-deep transition-colors"
             >
-              {linkCopied ? '✓ Copied' : 'Copy'}
+              {linkCopied ? "✓ Copied" : "Copy"}
             </button>
           </div>
         </div>
