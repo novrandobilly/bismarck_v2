@@ -1,29 +1,34 @@
-import { cn } from '@/lib/utils/cn'
+import { cn } from "@/lib/utils/cn";
 
 interface Props {
-  size?: 'sm' | 'md'
-  centered?: boolean
-  overlay?: boolean
-  className?: string
+  size?: "sm" | "md";
+  centered?: boolean;
+  overlay?: boolean;
+  className?: string;
 }
 
-export function LoadingSpinner({ size = 'md', centered = false, overlay = false, className }: Props) {
+export function LoadingSpinner({
+  size = "md",
+  centered = false,
+  overlay = false,
+  className,
+}: Props) {
   const spinner = (
     <div
       className={cn(
-        'rounded-full border-kraft-border border-t-crust-gold animate-spin',
-        size === 'sm' ? 'w-4 h-4 border-2' : 'w-8 h-8 border-4',
+        "rounded-full border-kraft-border border-t-crust-gold animate-spin",
+        size === "sm" ? "w-4 h-4 border-2" : "w-8 h-8 border-4",
         className,
       )}
     />
-  )
+  );
 
   if (overlay) {
     return (
-      <div className="fixed inset-0 z-[60] flex items-center justify-center bg-ink-dark/30">
+      <div className="fixed inset-0 z-60 flex items-center justify-center bg-ink-dark/30">
         {spinner}
       </div>
-    )
+    );
   }
 
   if (centered) {
@@ -31,8 +36,8 @@ export function LoadingSpinner({ size = 'md', centered = false, overlay = false,
       <div className="flex w-full items-center justify-center py-12">
         {spinner}
       </div>
-    )
+    );
   }
 
-  return spinner
+  return spinner;
 }

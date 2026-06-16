@@ -1,35 +1,33 @@
-import { createBrowserRouter } from 'react-router-dom'
-import { ProtectedRoute } from './ProtectedRoute'
-import { GuestWrapper, AdminWrapper } from '@/components/MainWrapper'
-import HomePage from '@/pages/home'
-import PublicMenuPage from '@/pages/menu'
-import LoginPage from '@/pages/bismarck/login'
-import NotFoundPage from '@/pages/not-found'
-import MenuCatalogPage from '@/pages/bismarck/menu'
-import DashboardPage from '@/pages/bismarck/dashboard'
-import SessionNewPage from '@/pages/bismarck/sessions/new'
-import SessionDetailPage from '@/pages/bismarck/sessions/detail'
-import OrderPage from '@/pages/order'
-import OrderSuccessPage from '@/pages/order/success'
-import UploadProofPage from '@/pages/upload-proof'
-import PaymentsPage from '@/pages/bismarck/payments'
+import { createBrowserRouter } from "react-router-dom";
+import { ProtectedRoute } from "./ProtectedRoute";
+import { GuestWrapper, AdminWrapper } from "@/components/MainWrapper";
+import HomePage from "@/pages/home";
+import PublicMenuPage from "@/pages/menu";
+import LoginPage from "@/pages/bismarck/login";
+import NotFoundPage from "@/pages/not-found";
+import MenuCatalogPage from "@/pages/bismarck/menu";
+import DashboardPage from "@/pages/bismarck/dashboard";
+import SessionNewPage from "@/pages/bismarck/sessions/new";
+import SessionDetailPage from "@/pages/bismarck/sessions/detail";
+import OrderPage from "@/pages/order";
+import OrderSuccessPage from "@/pages/success";
+import UploadProofPage from "@/pages/upload-proof";
+import PaymentsPage from "@/pages/bismarck/payments";
 
 export const router = createBrowserRouter([
   {
     element: <GuestWrapper />,
     children: [
-      { path: '/', element: <HomePage /> },
-      { path: '/menu', element: <PublicMenuPage /> },
-      { path: '/order/:sessionId', element: <OrderPage /> },
-      { path: '/order/:sessionId/success', element: <OrderSuccessPage /> },
-      { path: '/upload-proof', element: <UploadProofPage /> },
+      { path: "/", element: <HomePage /> },
+      { path: "/menu", element: <PublicMenuPage /> },
+      { path: "/order/:sessionId", element: <OrderPage /> },
+      { path: "/order/:sessionId/success", element: <OrderSuccessPage /> },
+      { path: "/upload-proof", element: <UploadProofPage /> },
     ],
   },
   {
     element: <GuestWrapper />,
-    children: [
-      { path: '/bismarck/login', element: <LoginPage /> },
-    ],
+    children: [{ path: "/bismarck/login", element: <LoginPage /> }],
   },
   {
     element: <ProtectedRoute />,
@@ -37,14 +35,14 @@ export const router = createBrowserRouter([
       {
         element: <AdminWrapper />,
         children: [
-          { path: '/bismarck/dashboard', element: <DashboardPage /> },
-          { path: '/bismarck/sessions/new', element: <SessionNewPage /> },
-          { path: '/bismarck/sessions/:id', element: <SessionDetailPage /> },
-          { path: '/bismarck/menu', element: <MenuCatalogPage /> },
-          { path: '/bismarck/payments', element: <PaymentsPage /> },
+          { path: "/bismarck/dashboard", element: <DashboardPage /> },
+          { path: "/bismarck/sessions/new", element: <SessionNewPage /> },
+          { path: "/bismarck/sessions/:id", element: <SessionDetailPage /> },
+          { path: "/bismarck/menu", element: <MenuCatalogPage /> },
+          { path: "/bismarck/payments", element: <PaymentsPage /> },
         ],
       },
     ],
   },
-  { path: '*', element: <NotFoundPage /> },
-])
+  { path: "*", element: <NotFoundPage /> },
+]);
