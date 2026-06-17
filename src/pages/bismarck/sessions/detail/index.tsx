@@ -1,11 +1,14 @@
 import { useParams, Link } from "react-router-dom";
+import { useState } from "react";
 import { useSessionDetail } from "./hooks/useSessionDetail";
 import { useToggleFulfilled } from "./hooks/useToggleFulfilled";
 import { useCloseSession } from "./hooks/useCloseSession";
 import { useMarkAllFulfilled } from "./hooks/useMarkAllFulfilled";
+import { useUpdateSession } from "./hooks/useUpdateSession";
 import { StatsRow } from "./features/StatsRow";
 import { OrderTable } from "./features/OrderTable";
 import { FulfillmentBreakdown } from "./features/FulfillmentBreakdown";
+import { EditSessionModal } from "./features/EditSessionModal";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import type { Order } from "@/types/order";
 
@@ -16,6 +19,9 @@ export default function SessionDetailPage() {
     useToggleFulfilled(id);
   const { mutate: closeSession, isPending: isClosing } = useCloseSession();
   const { mutate: markAll, isPending: isMarkingAll } = useMarkAllFulfilled(id);
+  const [isEditing, setIsEditing] = useState(false);
+  const { mutate: updateSession, isPending: isUpdating, error: updateError } =
+    useUpdateSession(id);
 
   if (isLoading || !data) {
     return (
@@ -74,15 +80,26 @@ export default function SessionDetailPage() {
             >
               {isOpen ? "Open" : "Closed"}
             </span>
-            {isOpen && (
-              <button
-                onClick={handleClose}
-                disabled={isClosing}
-                className="cursor-pointer text-xs text-red-500 hover:underline disabled:opacity-60"
-              >
-                Close session
-              </button>
-            )}
+            <div className="flex items-center gap-2">
+              {isOpen && (
+                <>
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    className="cursor-pointer text-xs text-amber-600 hover:underline"
+                  >
+                    Edit session
+                  </button>
+                  <span className="text-stone-300 text-xs">|</span>
+                  <button
+                    onClick={handleClose}
+                    disabled={isClosing}
+                    className="cursor-pointer text-xs text-red-500 hover:underline disabled:opacity-60"
+                  >
+                    Close session
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         </div>
 
@@ -127,6 +144,20 @@ export default function SessionDetailPage() {
 
         <FulfillmentBreakdown orders={orders} />
       </div>
+
+      {isEditing && (
+        <EditSessionModal
+          session={session}
+          isSaving={isUpdating}
+          saveError={updateError instanceof Error ? updateError.message : null}
+          onClose={() => setIsEditing(false)}
+          onSave={(values) => {
+            updateSession(values, {
+              onSuccess: () => setIsEditing(false),
+            });
+          }}
+        />
+      )}
     </div>
   );
 }

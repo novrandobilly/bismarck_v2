@@ -14,7 +14,7 @@ const schema = z.object({
   fulfillment_type: z.enum(['pickup', 'delivery', 'custom']),
   delivery_address: z.string().default(''),
   custom_location: z.string().default(''),
-  notes: z.string().default(''),
+  notes: z.string().max(500, 'Special notes must be 500 characters or less').default(''),
   items: z.array(z.object({
     session_item_id: z.string(),
     quantity: z.number().int().min(0),

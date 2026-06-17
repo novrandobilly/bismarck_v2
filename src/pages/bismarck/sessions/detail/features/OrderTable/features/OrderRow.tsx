@@ -111,6 +111,15 @@ export function OrderRow({ order, onToggleFulfilled, isToggling }: Props) {
         {order.delivery_address && <p className="text-xs text-stone-400 mt-0.5 max-w-[160px] truncate">{order.delivery_address}</p>}
       </td>
       <td className="py-3 px-4">
+        {order.notes ? (
+          <p className="text-xs text-stone-600 whitespace-pre-line max-w-[200px] break-words">
+            {order.notes}
+          </p>
+        ) : (
+          <span className="text-xs text-stone-300 italic">-</span>
+        )}
+      </td>
+      <td className="py-3 px-4">
         {orderItems.map(oi => {
           const name = oi.preorder_session_items?.menu_items?.name ?? 'Item'
           const price = oi.preorder_session_items?.price ?? 0
